@@ -1,1 +1,0 @@
-Ovdje se nalazi SHA256 implementacija u C-u koju pomocu node-gyp-a kompajlamo u "addon" za node.js.
