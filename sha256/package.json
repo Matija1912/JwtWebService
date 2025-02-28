@@ -1,0 +1,15 @@
+{
+  "name": "sha256",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "install": "node-gyp rebuild",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-gyp": "^9.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

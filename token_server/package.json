@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "sha256addon": "file:../sha256"
+  }
+}
