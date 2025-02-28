@@ -1,8 +1,14 @@
 const { sha256 } = require('../sha256/build/Release/sha256addon');
 let token;
 
-console.log(sha256("hello world"))
-console.log(sha256("hello worlasdd"))
+console.log(sha256('hello worldhello world'))
+let inp = 'hello world';
+for(let i = 0; i < 4; i++){
+    console.log("Input: " + inp);
+    console.log(sha256(inp));
+    inp += 'hello world'
+    inp = inp.replace(/[^\x20-\x7E]/g, ''); 
+}
 
 
 // try{

@@ -7,10 +7,12 @@
 //Desna rotacija (kruzna)
 #define ROTR(n, x) ((x >> n) | (x << (32 - n))) //pomicemo desno i popunimo s lieve strane (| (x << (32 - n)))
 
-uint32_t SHA265_HASH_VALUES[8] = {
+uint32_t SHA265_HASH_VALUES_INITIAL[8] = {
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
+
+uint32_t SHA265_HASH_VALUES[8];
 
 const uint32_t SHA265_ROUND_CONSTANTS[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -29,7 +31,7 @@ void expandMessageSchedule(uint32_t** blockArray, uint8_t **paddedMessage, int b
 void preprocessMessage(const uint8_t *input, size_t len, uint8_t **paddedMessage, size_t *paddedLen);
 
 void compression(uint32_t** block_array, int blockNumber){
-
+    memcpy(SHA265_HASH_VALUES, SHA265_HASH_VALUES_INITIAL, sizeof(SHA265_HASH_VALUES_INITIAL));
     for(int i = 0; i < blockNumber; i++){
         uint32_t a = SHA265_HASH_VALUES[0];
         uint32_t b = SHA265_HASH_VALUES[1];
@@ -120,7 +122,7 @@ void expandMessageSchedule(uint32_t** blockArray, uint8_t **paddedMessage, int b
 void preprocessMessage(const uint8_t *input, size_t len, uint8_t **paddedMessage, size_t *paddedLen){
     size_t newLen;
 
-    newLen = len + 1; //Dodavanje jednog bajta na kraj.
+    newLen = len + 1; //Dodavanje jednog bajta na kraj (povecamo len).
     while(newLen % 64 != 56){ //Dodavanje nula (8 bitova) sve do zadnja 8 bajta (64 bita) koje cemo koristiti kasnije. (PADDING)
         newLen += 1;
     }
@@ -157,15 +159,14 @@ char* sha256(char* message){
     free(paddedMessage);
     
     char* hash_output = (char*)malloc(65);
-    if (!hash_output) {
-        return NULL; // Handle allocation failure
-    }
 
     snprintf(hash_output, 65, "%08x%08x%08x%08x%08x%08x%08x%08x",
              SHA265_HASH_VALUES[0], SHA265_HASH_VALUES[1], SHA265_HASH_VALUES[2],
              SHA265_HASH_VALUES[3], SHA265_HASH_VALUES[4], SHA265_HASH_VALUES[5],
              SHA265_HASH_VALUES[6], SHA265_HASH_VALUES[7]);
+
              
+
     return hash_output;
 }
 
