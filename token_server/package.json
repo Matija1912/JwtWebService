@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "sha256addon": "file:../sha256"
+    "sha256addon": "file:../cryptography"
   }
 }

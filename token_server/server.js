@@ -1,24 +1,9 @@
-const hashing = require('../sha256/build/Release/hashingaddon');
 const { createHash, createHmac, hash } = require('crypto');
-let token;
+const path = require('path');
+const { create_hmac_sha256 } = require(path.join(__dirname, 'js_cryptography', 'cryptography.js'));
 
-const message = "hello";
-const key = "key";
-
-try{
-
-    console.log("My implementation: ");
-    let res = hashing.hmac_sha256(message, key);
-    console.log(res);
-
-    console.log("Crypto implementation: ");
-    let bytes1 = createHmac('sha256', key).update(message).digest('hex');
-    console.log(bytes1);
-
-}catch(e){
-    console.log(e.message);
-}
-
+const hmac = create_hmac_sha256('Key').update('Hello');
+console.log(hmac.digest('heX'));
 
 // try{
 //     token = jwt.signToken('asd', 'secret', 3);
