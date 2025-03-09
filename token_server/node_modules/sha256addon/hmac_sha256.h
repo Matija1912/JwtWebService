@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-uint8_t* hmac_sha256(char* message, char* key);
+uint8_t* hmac_sha256(uint8_t* message, uint8_t*key);
 
 #endif 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "sha256.h"
 
 #define SHA256_BLOCK_SIZE 64 //definiramo velicinu bloka (za sha256 to je 512 bitova ili 64 bajta)

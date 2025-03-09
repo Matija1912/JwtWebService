@@ -39,7 +39,7 @@ export class HmacSha256{
             }
     
             if(format.toLowerCase() == 'raw' || format.toLowerCase() == 'bin' || format.toLowerCase() == 'binary'){
-                console.log('raw bin format');
+                return this.hmac_sha256(this.data, this.secretKey)
             }
 
         }

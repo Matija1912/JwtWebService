@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "string.h": "c",
+        "base64url.c": "cpp",
+        "system_error": "c"
     }
 }
