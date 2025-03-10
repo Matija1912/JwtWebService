@@ -1,0 +1,14 @@
+Base64Url.
+
+Implementacija base64url encodera i decodera node modula u c-u.
+Encoder => prima 2 argumenta -> uint8_t* (buffer) input i velicinu buffera. 
+	U js modulu je omoguceno predati ulaz kao string ili buffer -> 
+	string ce se uvijek convertat u buffer dok kod predaje buffera kao 
+	argumenta direktno se prosljeduje u funkciju.
+
+	Encoder radi iskljucivo sa stringovima i bufferima zato sto JWT koristi base64encoder
+	za encodanje buffera i stringova. JWT encoda payload i header u base64url
+	tako da preda STRING reprezentaciju json objekta u base64url encoder, dok 
+	kod encodanja rezultata HMAC_SHA256 (potpisa) kao ulaz u base64url encoder 
+	uzima binarni rezultat HMAC_SHA funkcije 
+	(NE UZIMA STRING REPREZENTACIJU HEX REZULTATA KAO STO VIDIMO KOD REZULTATA MNOGIH IMPLEMENTACIJA SHA256 HASH FUNKCIJA).

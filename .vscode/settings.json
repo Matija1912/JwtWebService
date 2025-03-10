@@ -4,6 +4,7 @@
         "stdint.h": "c",
         "string.h": "c",
         "base64url.c": "cpp",
-        "system_error": "c"
+        "system_error": "c",
+        "functional": "c"
     }
 }
