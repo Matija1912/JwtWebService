@@ -5,6 +5,7 @@
         "string.h": "c",
         "base64url.c": "cpp",
         "system_error": "c",
-        "functional": "c"
+        "functional": "c",
+        "base64url.h": "c"
     }
 }

@@ -29,17 +29,18 @@ export class HmacSha256{
 
     digest = (format) => {
         if(this.data){
-
+            const buffer = Buffer.isBuffer(this.data) ? this.data : Buffer.from(this.data);
+            const secretKeyBuffer = Buffer.isBuffer(this.secretKey) ? this.secretKey : Buffer.from(this.secretKey);
             if(format.toLowerCase() == 'hex'){
                 try{
-                    return this.hmac_sha256(this.data, this.secretKey).toString('hex');
+                    return this.hmac_sha256(buffer, buffer.length, secretKeyBuffer, secretKeyBuffer.length).toString('hex');
                 }catch(e){
                     console.log(e)
                 }
             }
     
             if(format.toLowerCase() == 'raw' || format.toLowerCase() == 'bin' || format.toLowerCase() == 'binary'){
-                return this.hmac_sha256(this.data, this.secretKey)
+                return this.hmac_sha256(buffer, buffer.length, secretKeyBuffer, secretKeyBuffer.length);
             }
 
         }

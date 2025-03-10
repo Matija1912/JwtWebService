@@ -5,64 +5,86 @@
 #include <stdlib.h>
 
 napi_value HmacSha256Wrapper(napi_env env, napi_callback_info info){
-    size_t argc = 2;
-    napi_value args[2];
+    size_t argc = 4;
+    napi_value args[4];
 
     napi_get_cb_info(env, info, &argc, args, NULL, NULL);
 
-    if (argc < 2) {
-        napi_throw_error(env, NULL, "String argument required.");
+    if (argc < 4) {
+        napi_throw_error(env, NULL, "4 args required");
         return NULL;
     }
 
-    napi_valuetype argType1, argType2;
-    napi_status status = napi_typeof(env, args[0], &argType1);
-    if( argType1 != napi_string ){
-        napi_throw_error(env, NULL, "First argument must be a string.");
+    bool isBuffer;
+    napi_status status = napi_is_buffer(env, args[0], &isBuffer);
+    if (status != napi_ok || !isBuffer) {
+        napi_throw_error(env, NULL, "Expected a Buffer (Binary input).");
         return NULL;
     }
 
-    status = napi_typeof(env, args[1], &argType2);
-    if( argType2 != napi_string ){
-        napi_throw_error(env, NULL, "Second argument must be a string."); // Vracamo exception u JS exception sistem
+    napi_valuetype messageLengthType;
+    status = napi_typeof(env, args[1], &messageLengthType);
+    if( messageLengthType != napi_number ){
+        napi_throw_error(env, NULL, "Second argument must be a number.");
         return NULL;
     }
-    
-    //extractanje message i key parametra
-    size_t messageSize;
-    napi_get_value_string_utf8(env, args[0], NULL, 0, &messageSize);
-    char* message = (char*)malloc(messageSize + 1);
-    napi_get_value_string_utf8(env, args[0], message, messageSize + 1, NULL);
 
-    size_t keySize;
-    napi_get_value_string_utf8(env, args[1], NULL, 0, &keySize);
-    char* key = (char*)malloc(keySize + 1);
-    napi_get_value_string_utf8(env, args[1], key, keySize + 1, NULL);
+    status = napi_is_buffer(env, args[2], &isBuffer);
+    if (status != napi_ok || !isBuffer) {
+        napi_throw_error(env, NULL, "Expected a Buffer (Binary input).");
+        return NULL;
+    }
 
+    napi_valuetype keyLengthType;
+    status = napi_typeof(env, args[1], &keyLengthType);
+    if( keyLengthType != napi_number ){
+        napi_throw_error(env, NULL, "Second argument must be a number.");
+        return NULL;
+    }
 
-    uint8_t* hmacResult = hmac_sha256(message, key);
-    free(message);
-    free(key);
+    // extractanje binary podataka
+    void* messageData;
+    size_t mesageDataLen;
+    status = napi_get_buffer_info(env, args[0], &messageData, &mesageDataLen);
+    if (status != napi_ok) {
+        napi_throw_error(env, NULL, "Failed to retrieve buffer info.");
+        return NULL;
+    }
 
-    // Vracamo JS string (Binarni rezultatu => hex string)
-    // char hexString[65];  // 32 bajta (2 chara za prikaz hex vrijednosti  =>  %02x) + null (\0)
-    // for (int i = 0; i < 32; i++) {
-    //     sprintf(&hexString[i * 2], "%02x", hmacResult[i]);
-    // }
-    // hexString[64] = '\0';
+     // Extract data length (convert number to size_t) => Js number je spremljen kao 64bit float => koristimo double
+    double messageSize;
+    status = napi_get_value_double(env, args[1], &messageSize);
+    if (status != napi_ok || messageSize <= 0) {
+        napi_throw_error(env, NULL, "Invalid data length.");
+        return NULL;
+    }
+    size_t actualMessageSize = (size_t)messageSize;
 
-    // free(hmacResult);
-    // // napi_value result;
-    // napi_create_string_utf8(env, hexString, NAPI_AUTO_LENGTH, &result);
-    // return result;
+    // extractanje binary podataka
+    void* keyData;
+    size_t keyDataLen;
+    status = napi_get_buffer_info(env, args[2], &keyData, &keyDataLen);
+    if (status != napi_ok) {
+        napi_throw_error(env, NULL, "Failed to retrieve buffer info.");
+        return NULL;
+    }
 
-    // Vracamo binarno
+     // Extract data length (convert number to size_t) => Js number je spremljen kao 64bit float => koristimo double
+    double keySize;
+    status = napi_get_value_double(env, args[3], &keySize);
+    if (status != napi_ok || keySize <= 0) {
+        napi_throw_error(env, NULL, "Invalid data length.");
+        return NULL;
+    }
+    size_t actualKeySize = (size_t)keySize;
+
+    uint8_t* hmacResult = hmac_sha256(messageData, actualMessageSize, keyData, actualKeySize);
+
     napi_value buffer;
     void* data;
     napi_create_buffer_copy(env, 32, hmacResult, &data, &buffer);
     free(hmacResult);
     return buffer;
-
 }
 
 

@@ -6,12 +6,11 @@
 
 #define SHA256_BLOCK_SIZE 64 //definiramo velicinu bloka (za sha256 to je 512 bitova ili 64 bajta)
 
-uint8_t* hmac_sha256(uint8_t* message, uint8_t* key);
-uint8_t* process(uint8_t* message, uint8_t* innerPadding, size_t innerPaddingLen, uint8_t* outerPadding, size_t outerPaddingLen);
+uint8_t* hmac_sha256(uint8_t* message, size_t mesageLen, uint8_t*key, size_t keyLength);
+uint8_t* process(uint8_t* message, size_t messageLen, uint8_t* innerPadding, size_t innerPaddingLen, uint8_t* outerPadding, size_t outerPaddingLen);
 
-uint8_t* hmac_sha256(uint8_t* message, uint8_t*key){
+uint8_t* hmac_sha256(uint8_t* message, size_t mesageLen, uint8_t*key, size_t keyLength){
 
-    size_t keyLength = strlen(key);
     uint8_t innerPadding[SHA256_BLOCK_SIZE];
     uint8_t outerPadding[SHA256_BLOCK_SIZE];
     memset(innerPadding, 0x36, SHA256_BLOCK_SIZE); //popunimo polje od 512 bitova (64 bajta) sa 0x36 (hex vrijednost 36) => inner padding
@@ -52,13 +51,13 @@ uint8_t* hmac_sha256(uint8_t* message, uint8_t*key){
 
     
 
-    return process(message ,innerPadding, sizeof(innerPadding), outerPadding, sizeof(outerPadding));
+    return process(message, mesageLen ,innerPadding, sizeof(innerPadding), outerPadding, sizeof(outerPadding));
 
 }
 
-uint8_t* process(uint8_t* message, uint8_t* innerPadding, size_t innerPaddingLen, uint8_t* outerPadding, size_t outerPaddingLen){
+uint8_t* process(uint8_t* message, size_t messageLen, uint8_t* innerPadding, size_t innerPaddingLen, uint8_t* outerPadding, size_t outerPaddingLen){
 
-    size_t messageLen = strlen(message);
+    //size_t messageLen = strlen(message);
 
     size_t newLen = innerPaddingLen + messageLen;
     uint8_t* ipadApendedWithMessage = (uint8_t*)malloc(newLen);
@@ -85,12 +84,12 @@ uint8_t* process(uint8_t* message, uint8_t* innerPadding, size_t innerPaddingLen
 
 }
  
-int main(){
+// int main(){
 
-    uint8_t* res = hmac_sha256("Hello", "Key"); 
-    for(int i = 0; i < 32; i++){
-        printf("%02x", res[i]);
-    }
+//     uint8_t* res = hmac_sha256("Hello", "Key"); 
+//     for(int i = 0; i < 32; i++){
+//         printf("%02x", res[i]);
+//     }
 
-    return 0;
-}
+//     return 0;
+// }

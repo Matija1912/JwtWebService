@@ -2,15 +2,19 @@ const path = require('path');
 const { create_hmac_sha256 } = require(path.join(__dirname, 'js_cryptography', 'cryptography.js'));
 const { base64urlEncode, base64urlDecode } = require(path.join(__dirname, 'base64url', 'base64url.js'));
 
-const dta = "Y\0a";
-const enc = base64urlEncode(dta);
-const dec = base64urlDecode(enc);
+const header = {
+  "alg": "HS256",
+  "typ": "JWT"
+}
 
-console.log(enc);
-console.log(dec);
+const payload = {
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}
 
-// const dec = base64urlDecode(enc);
-//console.log(enc);
+const ph = base64urlEncode(JSON.stringify(header)) + "." +  base64urlEncode(JSON.stringify(payload));
 
-//WW9UaGlzIG15AA
-//WW9UaGlzIG15XDA=
+const hmac = create_hmac_sha256("your-256-bit-secret").update(ph).digest("raw");
+const hmacBase64url = base64urlEncode(hmac); 
+console.log(hmacBase64url);
