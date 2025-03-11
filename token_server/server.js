@@ -17,4 +17,4 @@ const ph = base64urlEncode(JSON.stringify(header)) + "." +  base64urlEncode(JSON
 
 const hmac = create_hmac_sha256("your-256-bit-secret").update(ph).digest("raw");
 const hmacBase64url = base64urlEncode(hmac); 
-console.log(hmacBase64url);
+console.log(ph + "." + hmacBase64url);

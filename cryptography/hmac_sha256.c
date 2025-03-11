@@ -57,8 +57,6 @@ uint8_t* hmac_sha256(uint8_t* message, size_t mesageLen, uint8_t*key, size_t key
 
 uint8_t* process(uint8_t* message, size_t messageLen, uint8_t* innerPadding, size_t innerPaddingLen, uint8_t* outerPadding, size_t outerPaddingLen){
 
-    //size_t messageLen = strlen(message);
-
     size_t newLen = innerPaddingLen + messageLen;
     uint8_t* ipadApendedWithMessage = (uint8_t*)malloc(newLen);
 
