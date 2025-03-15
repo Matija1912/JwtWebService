@@ -1,12 +1,13 @@
 {
     "targets": [
         {
-            "target_name": "hashingaddon",
+            "target_name": "json-web-token-cryptography",
             "sources": [
-                "hashing.c",
-                "sha256.c",
-                "hmac_sha256.c"
-            ] 
+                "src/native_implementation/cryptography.c",
+                "src/native_implementation/hmac_sha256.c",
+                "src/native_implementation/sha256.c",
+            ],
         }
-    ]
+    ],
+
 }

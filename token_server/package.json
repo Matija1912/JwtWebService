@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "sha256addon": "file:../cryptography",
-    "base64urladdon": "file:../encoding"
+    "base64urladdon": "file:../encoding",
+    "jwt_cryptography": "^1.0.0"
   }
 }
