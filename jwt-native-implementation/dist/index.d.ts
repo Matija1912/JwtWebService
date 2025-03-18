@@ -1,14 +1,43 @@
-declare class HmacSha256 {
-    hmac_sha256: Function;
-    data: string | null;
-    secretKey: string;
-    hash: Buffer | null;
-    constructor(secretKey: string, hmac_sha256: Function);
-    update: (data: string) => this;
-    digest: (format: string) => any;
+interface JwtHeader {
+    alg: string | Algorithm;
+    typ?: string | undefined;
 }
-declare function create_hmac_sha256(secretKey: string): HmacSha256;
-declare function base64urlEncode(input: Buffer | string): any;
-declare function base64urlDecode(input: Buffer | string): any;
+interface JwtPayload {
+    [key: string]: any;
+    iss?: string | undefined;
+    sub?: string | undefined;
+    aud?: string | string[] | undefined;
+    exp?: number | undefined;
+    nbf?: number | undefined;
+    iat?: number | undefined;
+    jti?: string | undefined;
+}
+interface Jwt {
+    header: JwtHeader;
+    payload: JwtPayload | string;
+    signature: string;
+}
+type Secret = string | Buffer;
+type Algorithm = "HS256" | "RS256";
+interface SignatureOptions {
+    algorithm?: Algorithm | undefined;
+    expiresIn?: number;
+    notBefore?: number;
+    audience?: string | string[] | undefined;
+    subject?: string | undefined;
+    issuer?: string | undefined;
+    noTimestamp?: boolean | undefined;
+    header?: JwtHeader | undefined;
+}
+interface VerifyOptions {
+    algorithm?: Algorithm | undefined;
+    complete?: boolean | undefined;
+}
 
-export { base64urlDecode, base64urlEncode, create_hmac_sha256 };
+declare function decode(data: string): any;
+declare function sign(payload: object, secretOrPrivateKey: Secret, // Secret key with HMAC SHA256 and Private key with asymetric RS256 algorithm
+options?: SignatureOptions): string;
+declare function verify(token: string, secretOrPrivateKey: Secret, // Secret key with HMAC SHA256 and Private key with asymetric RS256 algorithm
+options?: VerifyOptions): Jwt | JwtPayload | string;
+
+export { decode, sign, verify };

@@ -1,7 +1,14 @@
 {
   "dependencies": {
     "base64urladdon": "file:../encoding",
+    "jsonwebtoken": "^9.0.2",
     "jwt_cryptography": "^1.0.0",
-    "jwt-native-implementation": "^0.0.5"
+    "jwt-native-implementation": "^0.0.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

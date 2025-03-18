@@ -21,7 +21,7 @@ static const unsigned char base64DecodingTable[] = {
     64, 64, 64, 64, 64, 64
 };
 
-static const char base64EncodingTable[] = {
+static const unsigned char base64EncodingTable[] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
     'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
     'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
@@ -43,6 +43,7 @@ uint8_t* base64urlEncode(const uint8_t* byteStream, size_t inputSize, size_t* ou
     
     //uint8_t out[iterations * 4]; // output base64 i base64url encodinga je uvijek 4*n(n je iz skupa prirodnih brojeva) bajta. Ako imamo ulaz 1 char => 1 bajt, output je zapravo 2 bajta + 2 bajta paddinga, ako imamo ulaz 2 charactera izlaz je 3 bajta + 1 bajt paddinga.
     uint8_t* out = (uint8_t*)malloc(iterations * 4 + 1);
+
 
 
     size_t index = 0;
@@ -94,12 +95,16 @@ uint8_t* base64urlDecode(uint8_t* input, size_t inSize, size_t* outSize){
     // Decimal (index)values: 20     55     21     46
     // Base64 characters:     U      3      V      u
 
-    int blocksOfFourBytes = ((inSize - 1) / 3) + 1;
+
     size_t outputSize = (inSize / 4) * 3;
     //Ako zadnji blok od 4 bajta nije u potpunosti pun. Rezultat encodanja: c3Nzc3M= (inSize % 4 == 3) input: "sssss" => "ssss" + "s". sto tako i za slucaj (inSize % 4 == 2)
     if (inSize % 4 == 2) outputSize += 1;
     if (inSize % 4 == 3) outputSize += 2;
-    uint8_t* output = (uint8_t*)malloc(outputSize + 1); //Originalna poruka je 3/4 encodane poruke => +1 za \0 jer decodamo u string
+    if (inSize % 4 == 1) return NULL;  // Neisptavan input
+    int blocksOfFourBytes =  ((outputSize - 1) / 3) + 1;
+
+
+    uint8_t* output = (uint8_t*)malloc(outputSize); //Originalna poruka je 3/4 encodane poruke => +1 za \0 jer decodamo u string
 
     //blokovi po 4
     for(int i = 0; i < blocksOfFourBytes; i++){
@@ -132,8 +137,8 @@ uint8_t* base64urlDecode(uint8_t* input, size_t inSize, size_t* outSize){
 
     }
 
-    output[outputSize] = '\0';
     *outSize = outputSize;
+
     return output;
 
 }

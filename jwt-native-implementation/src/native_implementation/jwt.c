@@ -89,7 +89,7 @@ static napi_value base64urlEncodeWrapper(napi_env env, napi_callback_info info){
   return buffer;
 }
 
-napi_value base64urlDecodeWrapper(napi_env env, napi_callback_info info){
+static napi_value base64urlDecodeWrapper(napi_env env, napi_callback_info info){
   size_t argc = 2;
   napi_value args[2];
 
@@ -109,7 +109,7 @@ napi_value base64urlDecodeWrapper(napi_env env, napi_callback_info info){
 
   size_t outLen = 0;
   uint8_t* base64urlDecodingResult = base64urlDecode((uint8_t*)messageData, actualMessageSize, &outLen);
-  
+
   napi_value buffer;
   void* data;
   napi_create_buffer_copy(env, outLen, base64urlDecodingResult, &data, &buffer);
@@ -154,7 +154,13 @@ napi_value Init(napi_env env, napi_value exports){
       NULL
     }
   };
-  status = status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
+  status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
+
+  if (status != napi_ok) {
+    napi_throw_error(env, NULL, "Failed to define properties");
+    return NULL;
+  }
+
   // napi_value result;
   // NODE_API_CALL(env, napi_create_object(env, &result));
 

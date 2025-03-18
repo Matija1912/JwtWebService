@@ -46,84 +46,89 @@ var require_native = __commonJS({
     "use strict";
     init_cjs_shims();
     var import_path = __toESM(require("path"));
-    var { hmac_sha256, base64url_encode, base64url_decode } = require("node-gyp-build")(import_path.default.resolve(__dirname, ".."));
-    var jwt2 = {
-      hmac_sha256,
-      base64url_encode,
-      base64url_decode
+    var { hmac_sha256: hmac_sha2562, base64url_encode: base64url_encode2, base64url_decode: base64url_decode2 } = require("node-gyp-build")(import_path.default.resolve(__dirname, ".."));
+    var native = {
+      hmac_sha256: hmac_sha2562,
+      base64url_encode: base64url_encode2,
+      base64url_decode: base64url_decode2
     };
-    module2.exports = jwt2;
+    module2.exports = native;
   }
 });
 
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
-  base64urlDecode: () => base64urlDecode,
-  base64urlEncode: () => base64urlEncode,
-  create_hmac_sha256: () => create_hmac_sha256
+  decode: () => decode,
+  sign: () => sign,
+  verify: () => verify
 });
 module.exports = __toCommonJS(index_exports);
 init_cjs_shims();
-var import_native = __toESM(require_native());
-var HmacSha256 = class {
-  hmac_sha256;
-  data;
-  secretKey;
-  hash;
-  constructor(secretKey, hmac_sha256) {
-    this.hmac_sha256 = hmac_sha256;
-    this.data = null;
-    this.secretKey = secretKey;
-    this.hash = null;
+
+// src/errors.ts
+init_cjs_shims();
+var InvalidToken = class extends Error {
+  constructor(msg) {
+    super(msg);
   }
-  update = (data) => {
-    if (!this.data) {
-      this.data = data;
-    } else {
-      this.data += data;
-    }
-    return this;
-  };
-  digest = (format) => {
-    if (this.data) {
-      const buffer = Buffer.from(this.data);
-      const secretKeyBuffer = Buffer.from(this.secretKey);
-      if (format.toLowerCase() == "hex") {
-        try {
-          return this.hmac_sha256(buffer, buffer.length, secretKeyBuffer, secretKeyBuffer.length).toString("hex");
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      if (format.toLowerCase() == "raw" || format.toLowerCase() == "bin" || format.toLowerCase() == "binary") {
-        return this.hmac_sha256(buffer, buffer.length, secretKeyBuffer, secretKeyBuffer.length);
-      }
-    }
-  };
 };
-function create_hmac_sha256(secretKey) {
-  return new HmacSha256(secretKey, import_native.default.hmac_sha256);
+
+// src/index.ts
+var import_native = __toESM(require_native());
+function decode(data) {
+  return (0, import_native.base64url_decode)(Buffer.from(data), Buffer.from(data).length);
 }
-function base64urlEncode(input) {
-  const buffer = Buffer.isBuffer(input) ? input : Buffer.from(input);
-  try {
-    return import_native.default.base64url_encode(buffer, buffer.length);
-  } catch (e) {
-    console.log(e);
+function sign(payload, secretOrPrivateKey, options) {
+  const iat = Math.floor(Date.now() / 1e3);
+  const payloadData = Buffer.from(JSON.stringify({
+    ...payload,
+    ...options?.noTimestamp ? {} : { iat },
+    ...options?.notBefore !== void 0 ? { nbf: options.notBefore + iat } : {},
+    ...options?.expiresIn !== void 0 ? { exp: options.expiresIn + iat } : {},
+    ...options?.audience !== void 0 ? { aud: options.audience } : {},
+    ...options?.issuer !== void 0 ? { iss: options.issuer } : {},
+    ...options?.subject !== void 0 ? { sub: options.subject } : {}
+  }));
+  const headerData = Buffer.from(JSON.stringify({
+    ...options?.algorithm !== void 0 ? { alg: options.algorithm } : { alg: "HS256" },
+    ...options?.header?.typ !== void 0 ? { typ: options.header.typ } : { typ: "JWT" }
+  }));
+  if (options === void 0 || options.algorithm === void 0 || options.algorithm === "HS256") {
+    const b64u = Buffer.from((0, import_native.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native.base64url_encode)(payloadData, payloadData.length).toString());
+    const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
+    const signature = (0, import_native.hmac_sha256)(b64u, b64u.length, secret, secret.length);
+    return (0, import_native.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native.base64url_encode)(payloadData, payloadData.length).toString() + "." + (0, import_native.base64url_encode)(signature, signature.length).toString();
+  } else if (options.algorithm === "RS256") {
+    return "Asymetric";
   }
+  return "asd";
 }
-function base64urlDecode(input) {
-  const buffer = Buffer.isBuffer(input) ? input : Buffer.from(input);
-  try {
-    return import_native.default.base64url_decode(buffer, buffer.length);
-  } catch (e) {
-    console.log(e);
+function verify(token, secretOrPrivateKey, options) {
+  const jwtRegex = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+  if (!jwtRegex.test(token)) {
+    throw new InvalidToken("Invalid token format.");
   }
+  const jwt = token.split(".");
+  const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
+  const b64u = Buffer.from(jwt[0] + "." + jwt[1]);
+  const signature = (0, import_native.base64url_decode)(Buffer.from(jwt[2]), Buffer.from(jwt[2]).length);
+  const checkSignature = (0, import_native.hmac_sha256)(b64u, b64u.length, secret, secret.length);
+  if (checkSignature.toString("hex") === signature.toString("hex")) {
+    const payload = JSON.parse((0, import_native.base64url_decode)(Buffer.from(jwt[1]), Buffer.from(jwt[1]).length).toString());
+    if (payload.exp) {
+      if (Date.now() / 1e3 > payload.exp)
+        throw new InvalidToken("Token has expired.");
+    }
+    return payload;
+  } else {
+    throw new InvalidToken("Token has been tampered with.");
+  }
+  return "";
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  base64urlDecode,
-  base64urlEncode,
-  create_hmac_sha256
+  decode,
+  sign,
+  verify
 });
