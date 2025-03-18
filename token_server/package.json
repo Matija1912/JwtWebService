@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "base64urladdon": "file:../encoding",
-    "jwt_cryptography": "^1.0.0"
+    "jwt_cryptography": "^1.0.0",
+    "jwt-native-implementation": "^0.0.5"
   }
 }
