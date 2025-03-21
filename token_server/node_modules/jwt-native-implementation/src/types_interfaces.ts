@@ -1,3 +1,5 @@
+import { strict } from "assert";
+
 export interface JwtHeader {
     alg: string | Algorithm;
     typ?: string | undefined;
@@ -30,7 +32,7 @@ export interface SignatureOptions {
     // expiresIn and notBefore values should be passed as seconds 
     expiresIn?: number,
     notBefore?: number,
-    audience?: string | string[] | undefined,
+    audience? : string | string[] | undefined,
     subject?: string | undefined,
     issuer?: string | undefined,
     noTimestamp?: boolean | undefined,
@@ -39,5 +41,6 @@ export interface SignatureOptions {
 
 export interface VerifyOptions {
     algorithm?: Algorithm | undefined,
-    complete?: boolean | undefined;
+    complete?: boolean | undefined,
+    audience? : string | RegExp | string[] | undefined;
 }

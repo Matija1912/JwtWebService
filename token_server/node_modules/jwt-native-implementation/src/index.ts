@@ -49,9 +49,9 @@ export function sign(
     }else if(options.algorithm === "RS256"){
         // Asymetric cryptography => To be implemented
         return "Asymetric";
+    } else {
+        throw new InvalidToken("Invalid algorithm.");
     }
-
-    return "asd";
 }
 
 export function verify(
@@ -66,25 +66,75 @@ export function verify(
     }
 
     const jwt = token.split(".");
-    const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
 
-    const b64u = Buffer.from(jwt[0] + "." + jwt[1]);
-    const signature = base64url_decode(Buffer.from(jwt[2]), Buffer.from(jwt[2]).length);
-    
-    const checkSignature = hmac_sha256(b64u, b64u.length, secret, secret.length);
+    if((options === undefined) || (options.algorithm === undefined) || (options.algorithm === "HS256")){
 
-    if(checkSignature.toString("hex") === signature.toString("hex")){
-        const payload: JwtPayload = JSON.parse(base64url_decode(Buffer.from(jwt[1]), Buffer.from(jwt[1]).length).toString());
+        const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
 
-        if(payload.exp){
-            if((Date.now() / 1000) > payload.exp)
-            throw new InvalidToken("Token has expired.");
+        const b64u = Buffer.from(jwt[0] + "." + jwt[1]);
+        const signature = base64url_decode(Buffer.from(jwt[2]), Buffer.from(jwt[2]).length);
+        
+        const checkSignature = hmac_sha256(b64u, b64u.length, secret, secret.length);
+
+        if(checkSignature.toString("hex") === signature.toString("hex")){
+            const payload: JwtPayload = JSON.parse(base64url_decode(Buffer.from(jwt[1]), Buffer.from(jwt[1]).length).toString());
+
+            if(payload.exp){
+                if((Date.now() / 1000) > payload.exp){
+                    throw new InvalidToken("Token has expired.");
+                }
+            }
+
+            if(payload.nbf){
+                if((Date.now() / 1000) < payload.nbf){
+                    throw new InvalidToken("Token not valid yet.");
+                }
+            }
+
+            if(payload.aud){
+                
+                // Ako postoji audience claim u payloadu, ali kod verifikacije se nista ne preda => greska
+                if(!options?.audience) throw new InvalidToken("No audience passed to verify.");
+
+                // Ako postoji audience claim kod verifikacije ne odgovara ni string, ni array, ni RegExp => greska
+                if(((typeof options.audience) !== 'string') && (!Array.isArray(options.audience)) && (!(options.audience instanceof RegExp))) throw new InvalidToken("Invalid audience type.");
+
+                if(typeof payload.aud === 'string'){
+
+                    if(typeof options.audience === 'string' && payload.aud !== options.audience) throw new InvalidToken("JWT audience claim is not valid.");
+
+                    if(Array.isArray(options.audience) && !options.audience.includes(payload.aud)) throw new InvalidToken("JWT audience claim is not valid.");
+
+                    if((options.audience instanceof RegExp) && (!options.audience.test(payload.aud))) throw new InvalidToken("JWT audience claim is not valid.");
+
+                    
+                }
+
+                else if(Array.isArray(payload.aud)){
+
+                    if(typeof options.audience === 'string' && !payload.aud.includes(options.audience)) throw new InvalidToken("JWT audience claim is not valid.");
+
+                    if (Array.isArray(options.audience) && !options.audience.some(aud => payload.aud?.includes(aud))) {
+                        throw new InvalidToken("JWT audience claim is not valid.");
+                    }
+
+                    if(options.audience instanceof RegExp){
+                        const regex: RegExp = options.audience;
+                        if(!payload.aud.some(a => regex.test(a))) throw new InvalidToken("JWT audience claim is not valid.");
+                    }
+                }
+
+
+            }
+
+            return payload;
+        }else{
+            throw new InvalidToken("Token has been tampered with.");
         }
-
-        return payload;
-    }else{
-        throw new InvalidToken("Token has been tampered with.");
+    } else if(options.algorithm === "RS256"){
+        // Asymetric cryptography => To be implemented
+        return "Asymetric";
+    } else {
+        throw new InvalidToken("Invalid algorithm.");
     }
-
-    return "";
 }

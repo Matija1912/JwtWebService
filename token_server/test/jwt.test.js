@@ -16,14 +16,13 @@ describe('JWT Custom Implementation', () => {
     const payload = { userId: 456 };
     const token = jwt.sign(payload, secret);
     
-    // Modify token signature manually
-    const tamperedToken = token.replace(/.$/, 'x'); // Change last character
+    const tamperedToken = token.replace(/.$/, 'x');
 
     expect(() => jwt.verify(tamperedToken, secret)).toThrow('Token has been tampered with.');
   });
 
   it('should reject a token with an expired `exp` claim', () => {
-    const expiredPayload = { exp: Math.floor(Date.now() / 1000) - 10 }; // 10 sec in the past
+    const expiredPayload = { exp: Math.floor(Date.now() / 1000) - 10 };
     const token = jwt.sign(expiredPayload, secret);
 
     expect(() => jwt.verify(token, secret)).toThrow('Token has expired.');
@@ -44,7 +43,7 @@ describe('JWT Custom Implementation', () => {
   });
 
   it('should handle large payloads efficiently', () => {
-    const largePayload = { data: 'x'.repeat(10000) }; // Large 10KB payload
+    const largePayload = { data: 'x'.repeat(10000) };
     const token = jwt.sign(largePayload, secret);
     const decoded = jwt.verify(token, secret);
 

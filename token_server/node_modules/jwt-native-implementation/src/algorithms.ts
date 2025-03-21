@@ -45,7 +45,7 @@ class HmacSha256{
     
 }
 
-export function create_hmac_sha256(secretKey: string){
+function create_hmac_sha256(secretKey: string){
     return new HmacSha256(secretKey, jwt.hmac_sha256);
 }
 

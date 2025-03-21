@@ -101,8 +101,9 @@ function sign(payload, secretOrPrivateKey, options) {
     return (0, import_native.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native.base64url_encode)(payloadData, payloadData.length).toString() + "." + (0, import_native.base64url_encode)(signature, signature.length).toString();
   } else if (options.algorithm === "RS256") {
     return "Asymetric";
+  } else {
+    throw new InvalidToken("Invalid algorithm.");
   }
-  return "asd";
 }
 function verify(token, secretOrPrivateKey, options) {
   const jwtRegex = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
@@ -110,21 +111,50 @@ function verify(token, secretOrPrivateKey, options) {
     throw new InvalidToken("Invalid token format.");
   }
   const jwt = token.split(".");
-  const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
-  const b64u = Buffer.from(jwt[0] + "." + jwt[1]);
-  const signature = (0, import_native.base64url_decode)(Buffer.from(jwt[2]), Buffer.from(jwt[2]).length);
-  const checkSignature = (0, import_native.hmac_sha256)(b64u, b64u.length, secret, secret.length);
-  if (checkSignature.toString("hex") === signature.toString("hex")) {
-    const payload = JSON.parse((0, import_native.base64url_decode)(Buffer.from(jwt[1]), Buffer.from(jwt[1]).length).toString());
-    if (payload.exp) {
-      if (Date.now() / 1e3 > payload.exp)
-        throw new InvalidToken("Token has expired.");
+  if (options === void 0 || options.algorithm === void 0 || options.algorithm === "HS256") {
+    const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
+    const b64u = Buffer.from(jwt[0] + "." + jwt[1]);
+    const signature = (0, import_native.base64url_decode)(Buffer.from(jwt[2]), Buffer.from(jwt[2]).length);
+    const checkSignature = (0, import_native.hmac_sha256)(b64u, b64u.length, secret, secret.length);
+    if (checkSignature.toString("hex") === signature.toString("hex")) {
+      const payload = JSON.parse((0, import_native.base64url_decode)(Buffer.from(jwt[1]), Buffer.from(jwt[1]).length).toString());
+      if (payload.exp) {
+        if (Date.now() / 1e3 > payload.exp) {
+          throw new InvalidToken("Token has expired.");
+        }
+      }
+      if (payload.nbf) {
+        if (Date.now() / 1e3 < payload.nbf) {
+          throw new InvalidToken("Token not valid yet.");
+        }
+      }
+      if (payload.aud) {
+        if (!options?.audience) throw new InvalidToken("No audience passed to verify.");
+        if (typeof options.audience !== "string" && !Array.isArray(options.audience) && !(options.audience instanceof RegExp)) throw new InvalidToken("Invalid audience type.");
+        if (typeof payload.aud === "string") {
+          if (typeof options.audience === "string" && payload.aud !== options.audience) throw new InvalidToken("JWT audience claim is not valid.");
+          if (Array.isArray(options.audience) && !options.audience.includes(payload.aud)) throw new InvalidToken("JWT audience claim is not valid.");
+          if (options.audience instanceof RegExp && !options.audience.test(payload.aud)) throw new InvalidToken("JWT audience claim is not valid.");
+        } else if (Array.isArray(payload.aud)) {
+          if (typeof options.audience === "string" && !payload.aud.includes(options.audience)) throw new InvalidToken("JWT audience claim is not valid.");
+          if (Array.isArray(options.audience) && !options.audience.some((aud) => payload.aud?.includes(aud))) {
+            throw new InvalidToken("JWT audience claim is not valid.");
+          }
+          if (options.audience instanceof RegExp) {
+            const regex = options.audience;
+            if (!payload.aud.some((a) => regex.test(a))) throw new InvalidToken("JWT audience claim is not valid.");
+          }
+        }
+      }
+      return payload;
+    } else {
+      throw new InvalidToken("Token has been tampered with.");
     }
-    return payload;
+  } else if (options.algorithm === "RS256") {
+    return "Asymetric";
   } else {
-    throw new InvalidToken("Token has been tampered with.");
+    throw new InvalidToken("Invalid algorithm.");
   }
-  return "";
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

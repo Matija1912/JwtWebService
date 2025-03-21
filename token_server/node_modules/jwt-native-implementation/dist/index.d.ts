@@ -32,6 +32,7 @@ interface SignatureOptions {
 interface VerifyOptions {
     algorithm?: Algorithm | undefined;
     complete?: boolean | undefined;
+    audience?: string | RegExp | string[] | undefined;
 }
 
 declare function decode(data: string): any;
