@@ -101,13 +101,13 @@ uint8_t* base64urlDecode(uint8_t* input, size_t inSize, size_t* outSize){
     if (inSize % 4 == 2) outputSize += 1;
     if (inSize % 4 == 3) outputSize += 2;
     if (inSize % 4 == 1) return NULL;  // Neisptavan input
-    int blocksOfFourBytes =  ((outputSize - 1) / 3) + 1;
+    size_t blocksOfFourBytes =  ((outputSize - 1) / 3) + 1;
 
 
     uint8_t* output = (uint8_t*)malloc(outputSize); //Originalna poruka je 3/4 encodane poruke => +1 za \0 jer decodamo u string
 
     //blokovi po 4
-    for(int i = 0; i < blocksOfFourBytes; i++){
+    for(size_t i = 0; i < blocksOfFourBytes; i++){
 
         uint32_t temp = 0x0;
     
