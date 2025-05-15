@@ -56,7 +56,7 @@ export function sign(
 
 export function verify(
     token: string,
-    secretOrPrivateKey: Secret,  // Secret key with HMAC SHA256 and Private key with asymetric RS256 algorithm
+    secretOrPrivateKey: Secret,  
     options?: VerifyOptions
 ): Jwt | JwtPayload | string {
 

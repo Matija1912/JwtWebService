@@ -38,7 +38,6 @@ interface VerifyOptions {
 declare function decode(data: string): any;
 declare function sign(payload: object, secretOrPrivateKey: Secret, // Secret key with HMAC SHA256 and Private key with asymetric RS256 algorithm
 options?: SignatureOptions): string;
-declare function verify(token: string, secretOrPrivateKey: Secret, // Secret key with HMAC SHA256 and Private key with asymetric RS256 algorithm
-options?: VerifyOptions): Jwt | JwtPayload | string;
+declare function verify(token: string, secretOrPrivateKey: Secret, options?: VerifyOptions): Jwt | JwtPayload | string;
 
 export { decode, sign, verify };

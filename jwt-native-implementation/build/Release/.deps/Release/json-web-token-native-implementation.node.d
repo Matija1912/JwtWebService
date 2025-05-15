@@ -1,0 +1,1 @@
+cmd_Release/json-web-token-native-implementation.node := ln -f "Release/obj.target/json-web-token-native-implementation.node" "Release/json-web-token-native-implementation.node" 2>/dev/null || (rm -rf "Release/json-web-token-native-implementation.node" && cp -af "Release/obj.target/json-web-token-native-implementation.node" "Release/json-web-token-native-implementation.node")
