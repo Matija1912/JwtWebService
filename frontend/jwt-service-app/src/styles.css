@@ -1,0 +1,41 @@
+@import './theme.css';
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  body{
+    padding-left: 20px;
+    padding-right: 20px;
+    display: block;
+  }
+  .main-container {
+    width: 100%;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1223px) {
+  .main-container {
+    max-width: 640px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1224px) {
+  .main-container {
+    min-width: 1224px;
+    max-width: 1660px;
+  }
+}

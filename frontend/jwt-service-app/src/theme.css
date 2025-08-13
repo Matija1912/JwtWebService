@@ -1,0 +1,17 @@
+:root {
+  --bg-color: #e0e0e0;
+  --navbar-color: #e0e0e0;
+  --text-color: #1f1f1f;
+  --nav-link-underline-color: #1f1f1f;
+  --nav-border-color: #a1a1a1;
+  --highlight-color: #7c3aed;
+}
+
+:root[data-theme="dark"] {
+  --bg-color: #1f1f1f;
+  --navbar-color: #1f1f1f;
+  --text-color: #e0e0e0;
+  --nav-link-underline-color: #e0e0e0;
+  --nav-border-color: #404040;
+  --highlight-color: #7c3aed;
+}

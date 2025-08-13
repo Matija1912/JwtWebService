@@ -1,13 +1,16 @@
 {
   "dependencies": {
     "base64urladdon": "file:../encoding",
+    "express": "^5.1.0",
     "jwt_cryptography": "^1.0.0",
     "jwt-native-implementation": "^0.1.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"
   },
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "jest"
   }
 }
