@@ -5,6 +5,8 @@
   --nav-link-underline-color: #1f1f1f;
   --nav-border-color: #a1a1a1;
   --highlight-color: #7c3aed;
+  --hover-color: #8546ec;
+  --card-bg: #7c3aed;
 }
 
 :root[data-theme="dark"] {
@@ -14,4 +16,6 @@
   --nav-link-underline-color: #e0e0e0;
   --nav-border-color: #404040;
   --highlight-color: #7c3aed;
+  --hover-color: #8546ec;
+  --card-bg: #7c3aed;
 }

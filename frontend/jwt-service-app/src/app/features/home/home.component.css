@@ -1,24 +1,125 @@
 .home-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+  padding: 24px 20px 60px;
 }
 
-/* desktop: 3 columns */
-@media screen and (min-width: 900px) {
-  .home-container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.hero {
+  margin-bottom: 20px;
+  backdrop-filter: blur(110px);
+  -webkit-backdrop-filter: blur(10px);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+  padding: 48px 32px;
+  border: 1px solid var(--nav-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.welcome-text {
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  opacity: 0.7;
+  margin: 0 0 10px;
+}
+
+.hero-title {
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.05;
+  font-weight: 900;
+  margin: 0 0 14px;
+  color: var(--text-color);
+}
+
+.hero-subtitle {
+  margin: 0 0 20px;
+  font-size: 1.05rem;
+  max-width: 52ch;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.cta-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--nav-border-color);
+  text-decoration: none;
+  color: var(--text-color);
+}
+.ghost-btn:hover {
+  border-color: var(--hover-color);
+  color: var(--hover-color);
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  padding: 0;
+  margin: 8px 0 0;
+  list-style: none;
+}
+.meta li {
+  font-size: 12px;
+  opacity: 0.7;
+  border: 1px dashed var(--nav-border-color);
+  padding: 6px 8px;
+  border-radius: 999px;
+}
+
+.hero-right {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.hero-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.1) contrast(1.05);
+  border-radius: 12px;
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 36px 20px;
   }
 }
 
-
-.card img {
+.hero-about-left {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.hero-about-left img {
   width: 100%;
-  height: 500px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  border-radius: 8px;
+  filter: saturate(1.1) contrast(1.05);
+  border-radius: 12px;
+}
+
+.hero-center {
+  width: 100%;
+}
+
+.hero-icon, .bacc-icon {
+  fill: var(--text-color);
 }

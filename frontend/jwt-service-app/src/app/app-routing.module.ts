@@ -5,6 +5,7 @@ import { TestComponent } from './features/test/test.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent},
+  { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
   { path: 'test', component: TestComponent}
 ];
 

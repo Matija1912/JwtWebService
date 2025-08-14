@@ -1,6 +1,10 @@
 @import './theme.css';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+
 
 html, body {
+  font-family: 'JetBrains Mono', monospace;
   height: 100%;
   margin: 0;
 }
@@ -8,9 +12,25 @@ html, body {
 body {
   background: var(--bg-color);
   color: var(--text-color);
-  font-family: system-ui, sans-serif;
   display: flex;
   justify-content: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    radial-gradient(60% 60% at 15% 20%, rgba(123, 97, 255, 0.35), transparent 60%),
+    radial-gradient(55% 55% at 85% 75%, rgba(0, 200, 255, 0.25), transparent 60%),
+    radial-gradient(45% 45% at 60% 45%, rgba(255, 0, 128, 0.12), transparent 60%);
+  filter: blur(30px);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 /* Mobile */
@@ -39,3 +59,4 @@ body {
     max-width: 1660px;
   }
 }
+
