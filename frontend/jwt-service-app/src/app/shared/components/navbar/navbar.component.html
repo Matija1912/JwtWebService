@@ -7,10 +7,10 @@
   <button class="hamburger" onclick="document.body.classList.toggle('menu-open')">☰</button>
   <nav class="nav-links">
     <a [routerLink]="['/test']">Test</a>
-    <a href="#">Playground</a>
-    <a href="#">Tokens</a>
+<!--    account-->
     <a href="#">About</a>
-    <a href="#">Sign in</a>
+    <a *ngIf="!currentUser" [routerLink]="['/auth/login']">Sign in</a>
+    <a *ngIf="currentUser" (click)="logout()">Log out</a>
     <a class="theme-switch" style="border: none" (click)="toggleTheme.emit()">
       <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
            viewBox="0 0 152.2 75.6" style="enable-background:new 0 0 152.2 75.6;" xml:space="preserve">

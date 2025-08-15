@@ -7,6 +7,11 @@
   --highlight-color: #7c3aed;
   --hover-color: #8546ec;
   --card-bg: #7c3aed;
+  --text-danger: #f44336;
+  --text-success: #4ef355;
+  --text-info: #4eb9f3;
+  --invalid-color: #f44336;
+  --valid-color: #7c3aed;
 }
 
 :root[data-theme="dark"] {
@@ -18,4 +23,9 @@
   --highlight-color: #7c3aed;
   --hover-color: #8546ec;
   --card-bg: #7c3aed;
+  --text-danger: #f44336;
+  --text-success: #4ef355;
+  --text-info: #4eb9f3;
+  --invalid-color: #f44336;
+  --valid-color: #7c3aed;
 }

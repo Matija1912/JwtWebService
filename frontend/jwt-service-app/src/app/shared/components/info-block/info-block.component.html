@@ -1,0 +1,9 @@
+<div class="info-block-container">
+  <div *ngIf="data" class="info-block" [ngClass]="{
+      'info-block-danger': data.infoType === 'danger',
+      'info-block-success': data.infoType === 'success',
+      'info-block-info': data.infoType === 'info'
+      }">
+    <p>{{data.message}}</p>
+  </div>
+</div>

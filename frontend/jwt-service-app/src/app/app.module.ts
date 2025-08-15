@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './features/home/home.component';
 import { SharedModule } from './shared/shared.module';
 import { TestComponent } from './features/test/test.component';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { TestComponent } from './features/test/test.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

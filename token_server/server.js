@@ -2,12 +2,38 @@ const config = require('./config');
 const express = require('express');
 const jwt = require('jwt-native-implementation');
 const app = express();
+const mysql = require('mysql2/promise');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const argon2 = require('argon2');
 
-const api = require('./app/routes/api');
+const pool = mysql.createPool(config.pool);
 
-const apiRouter = api(express);
+const api = require('./app/routes/api/api');
+const auth = require('./app/routes/auth/auth');
+const sessionRestore = require('./app/routes/auth/sessionRestore');
+
+const apiRouter = api(express, pool);
+const authRouter = auth(express, pool, argon2, jwt, config.secret);
+const sessionRestoreRouter = sessionRestore(express, pool, jwt, config.secret);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.use(morgan('dev'));
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, \ Authorization');
+    next();
+});
 
 app.use('/api', apiRouter);
+app.use('/auth', authRouter);
+app.use('/sessionRestore', sessionRestoreRouter);
 
 app.listen( config.port, () => {
     console.log(`Server running on:  http://localhost:${config.port}`);

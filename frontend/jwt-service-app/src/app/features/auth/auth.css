@@ -56,12 +56,26 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.register-link {
+.info-link {
   text-align: center;
   margin-top: 12px;
 }
 
-.register-link a {
+.info-link a {
   color: var(--hover-color);
   text-decoration: none;
+}
+
+.error-info {
+  font-size: 12px;
+  color: var(--text-danger);
+  opacity: 100%;
+}
+
+.invalid {
+  border: 1px solid var(--invalid-color);
+}
+
+.valid {
+  border: 1px solid var(--valid-color);
 }

@@ -1,19 +1,41 @@
+<app-info-block [data]="infoData"></app-info-block>
 <div class="auth-container">
   <h1>Login</h1>
   <form  #loginForm="ngForm">
     <div class="form-group">
       <label>Email</label>
-      <input type="email" name="email" required />
+      <input type="email" name="email" [(ngModel)]="inputData.email" required
+             #email="ngModel"
+             pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+             [ngClass]="{
+              'valid': email.valid && (email.dirty || email.touched),
+              'invalid': email.invalid && (email.dirty || email.touched)
+              }">
+
+      <div *ngIf="email.errors && (email.dirty || email.touched)" class="error-info">
+        <p *ngIf="email.errors['required']">Email is required</p>
+        <p *ngIf="email.errors['pattern']">Invalid email</p>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Password</label>
-      <input type="password" name="password" required />
+      <input type="password" name="password" [(ngModel)]="inputData.password" required
+             #password=ngModel
+             [ngClass]="{
+             'valid': password.valid && (password.dirty || password.touched),
+             'invalid': password.invalid && (password.dirty || password.touched),
+             }"
+      >
+
+      <div *ngIf="password.errors && (password.dirty || password.touched)" class="error-info">
+        <p *ngIf="password.errors['required']">Password is empty</p>
+      </div>
     </div>
 
-    <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
-    <p class="register-link">
-      Don't have an account? <a routerLink="/auth/register">Register</a>
+    <button type="submit" [disabled]="loginForm.invalid" (click)="login()">Sign In</button>
+    <p class="info-link">
+      Don't have an account? <a [routerLink]="['/auth/register']">Register</a>
     </p>
   </form>
 </div>

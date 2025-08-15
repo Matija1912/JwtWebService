@@ -1,1 +1,72 @@
-<p>register works!</p>
+<app-info-block [data]="infoData"></app-info-block>
+<div class="auth-container">
+  <h1>Register</h1>
+  <form #registerForm="ngForm">
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" name="username" [(ngModel)]="inputData.username" required #username="ngModel"
+             minlength=5
+             [ngClass]="{
+      'valid': username.valid && (username.dirty || username.touched),
+      'invalid': username.invalid && (username.dirty || username.touched)
+      }">
+
+      <div *ngIf="username.errors && (username.dirty || username.touched)" class="error-info">
+        <p *ngIf="username.errors['required']">Username is required</p>
+        <p *ngIf="username.errors['minlength']">Username too short</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" name="email" [(ngModel)]="inputData.email" required #email="ngModel"
+             pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+             [ngClass]="{
+      'valid': email.valid && (email.dirty || email.touched),
+      'invalid': email.invalid && (email.dirty || email.touched)
+      }">
+
+      <div *ngIf="email.errors && (email.dirty || email.touched)" class="error-info">
+        <p *ngIf="email.errors['required']">Email is required</p>
+        <p *ngIf="email.errors['pattern']">Invalid email</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" name="password" [(ngModel)]="inputData.password" required #password="ngModel"
+             minlength=8
+             [ngClass]="{
+      'valid': password.valid && (password.dirty || password.touched),
+      'invalid': password.invalid && (password.dirty || password.touched)
+      }">
+
+      <div *ngIf="password.errors && (password.dirty || password.touched)" class="error-info">
+        <p *ngIf="password.errors['required']">Password is required</p>
+        <p *ngIf="password.errors['minlength']">Password too short</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Password Confirmation</label>
+      <input type="password" name="password-confirmation" [(ngModel)]="inputData.passwordConfirmation" required #passwordConfirmation="ngModel"
+             [ngClass]="{
+      'valid': passwordConfirmation.valid && (passwordConfirmation.dirty || passwordConfirmation.touched),
+      'invalid': passwordConfirmation.invalid && (passwordConfirmation.dirty || passwordConfirmation.touched)
+      }">
+
+      <div *ngIf="((passwordConfirmation.errors || (passwordConfirmation.value !== password.value)) && (passwordConfirmation.dirty || passwordConfirmation.touched))" class="error-info">
+        <p *ngIf="passwordConfirmation.errors?.['required']">Password is required</p>
+        <p *ngIf="password.value !== passwordConfirmation.value">Passwords do not match</p>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid || password.value !== passwordConfirmation.value" (click)="register({username:inputData.username, email:inputData.email, password:inputData.password})">Sign Up</button>
+
+    <p class="info-link">
+      Already registered? <a [routerLink]="['/auth/login']">Login</a>
+    </p>
+
+  </form>
+</div>

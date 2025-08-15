@@ -3,13 +3,15 @@ import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import {RouterLink} from "@angular/router";
 import {FooterComponent} from './components/footer/footer.component';
+import { InfoBlockComponent } from './components/info-block/info-block.component';
 
 
 
 @NgModule({
   declarations: [
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    InfoBlockComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +20,8 @@ import {FooterComponent} from './components/footer/footer.component';
   ],
   exports: [
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    InfoBlockComponent
   ]
 })
 export class SharedModule { }

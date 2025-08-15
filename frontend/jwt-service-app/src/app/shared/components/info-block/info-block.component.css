@@ -1,0 +1,27 @@
+.info-block-container {
+  display: flex;
+  justify-content: center;
+}
+
+.info-block {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  padding: 4px 8px;
+  height: 10px;
+}
+
+.info-block-danger {
+  border-left: 6px solid var(--text-danger);
+  color: var(--text-danger);
+}
+
+.info-block-success {
+  border-left: 6px solid var(--text-success);
+  color: var(--text-success);
+}
+
+.info-block-info {
+  border-left: 6px solid var(--text-info);
+  color: var(--text-info);
+}
