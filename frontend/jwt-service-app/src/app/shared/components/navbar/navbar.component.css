@@ -98,3 +98,31 @@
 .brand img {
   width: 90px;
 }
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  font-size: small;
+  padding-left: 8px;
+  margin-left: 12px;
+  border-left: 8px solid var(--highlight-color);
+}
+
+.user-info p, .user-info a {
+  margin: 2px;
+}
+
+.user-info p {
+  opacity: 50%;
+}
+
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.material-symbols-outlined {
+  color: var(--highlight-color)
+}
+

@@ -6,14 +6,19 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './features/home/home.component';
 import { SharedModule } from './shared/shared.module';
 import { TestComponent } from './features/test/test.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AuthInterceptor} from './core/interceptors/auth.interceptor';
+import { ProjectsComponent } from './features/projects/projects.component';
+import { ProjectCardComponent } from './features/projects/project-card/project-card.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    TestComponent
+    TestComponent,
+    ProjectsComponent,
+    ProjectCardComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +26,9 @@ import {HttpClientModule} from '@angular/common/http';
     SharedModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

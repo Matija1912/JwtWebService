@@ -6,12 +6,9 @@ module.exports = (express, pool, jwt, secret) => {
 
     sessionRestoreRouter.get('/me', async (req, res) => {
 
-        const t = req.body.token || req.params.token || req.headers['x-access-token'] || req.query.token;
+        console.log(req.decoded);
+        res.send({status:200, user:req.decoded});
 
-        console.log(t);
-        return res.json({
-            status: "/me"
-        });
     })
 
     return sessionRestoreRouter;

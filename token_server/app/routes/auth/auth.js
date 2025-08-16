@@ -37,10 +37,11 @@ module.exports = (express, pool, argon2, jwt, secret) => {
 
 
             const token = jwt.sign({
+                id: user.id,
                 email: user.email,
                 username: user.username
             }, secret, {
-                expiresIn: 3600
+                expiresIn: 7200
             })
 
             return res.status(200).json({

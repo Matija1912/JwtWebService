@@ -15,10 +15,10 @@ export class AppComponent implements OnInit{
     this.themeService.init();
     this.authService.refreshUser()?.subscribe({
       next: res => {
-        console.log(res);
+        console.log('User session refreshed');
       },
       error: err => {
-        console.log(err);
+        console.log(err.error.message);
       }
     });
   }

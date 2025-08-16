@@ -6,6 +6,8 @@ const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const argon2 = require('argon2');
+const cors = require('cors');
+
 
 const pool = mysql.createPool(config.pool);
 
@@ -24,12 +26,11 @@ app.use(bodyParser.urlencoded({
 
 app.use(morgan('dev'));
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, \ Authorization');
-    next();
-});
+app.use(cors({
+  origin: 'http://localhost:4200',   // Angular dev server
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);

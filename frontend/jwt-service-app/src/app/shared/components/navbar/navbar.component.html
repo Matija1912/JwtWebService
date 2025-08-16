@@ -1,13 +1,19 @@
 <header class="navbar">
-  <div class="brand">
-    <a [routerLink]="['/']">
-      <img src="logo.png" alt="JWT Service Logo" />
-    </a>
+  <div class="left-group">
+    <div class="brand">
+      <a [routerLink]="['/']">
+        <img src="logo.png" alt="JWT Service Logo" />
+      </a>
+    </div>
+    <div class="user-info" *ngIf="currentUser">
+      <span class="material-symbols-outlined">account_circle</span>
+      <a>{{currentUser.username}}</a>
+      <p>{{currentUser.email}}</p>
+    </div>
   </div>
   <button class="hamburger" onclick="document.body.classList.toggle('menu-open')">☰</button>
   <nav class="nav-links">
-    <a [routerLink]="['/test']">Test</a>
-<!--    account-->
+    <a *ngIf="currentUser" [routerLink]="['/projects']">Projects</a>
     <a href="#">About</a>
     <a *ngIf="!currentUser" [routerLink]="['/auth/login']">Sign in</a>
     <a *ngIf="currentUser" (click)="logout()">Log out</a>

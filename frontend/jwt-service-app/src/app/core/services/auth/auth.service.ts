@@ -43,7 +43,6 @@ export class AuthService {
         localStorage.setItem('id', result.account.id);
         this.currentUserSubject.next(result.account);
 
-        console.log(localStorage);
       })
     );
   }
@@ -61,13 +60,21 @@ export class AuthService {
     const username =   localStorage.getItem('username');
     const email =   localStorage.getItem('email');
     const id =   localStorage.getItem('id');
-
     if(!token || !username || !email || !id){
       this.currentUserSubject.next(null);
+      console.log('no user data in local storage')
       return;
     }
-
-    return this.http.get<any>(this.sessionRestoreUrl + '/me');
+    return this.http.get<{status: string, user: {id: string, username: string, email: string}}>(this.sessionRestoreUrl + '/me').pipe(
+      tap({
+        next: result => {
+          this.currentUserSubject.next(result.user);
+        },
+        error: err => {
+          this.logout();
+        }
+      })
+    );
   }
 
   setUser = (user: {id: string, username: string, email: string}) => {

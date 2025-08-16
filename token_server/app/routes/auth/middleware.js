@@ -1,27 +1,31 @@
 module.exports = (jwt, secret) => {
     return (req, res, next) => {
+      
+      const authHeader = req.headers['authorization'];
 
-      console.log("madafakka")
-      // const token = req.body.token || req.params.token || req.headers['x-access-token'] || req.query.token;
+      if (!authHeader) {
+         console.log('no token')
+         return res.status(403).json({ success: false, message: 'No token' });
+      }
 
-      console.log(req.body);
+      const token = authHeader.startsWith('Bearer ')
+         ? authHeader.slice(7)
+         : authHeader;
 
-      // if (!token) {
-      //    return res.status(403).send({
-      //       success: false,
-      //       message: 'No token'
-      //    });
-      // }
+      try{
 
-      // jwt.verify(token, secret, (err, decoded) => {
-      //    if (err) {
-      //          return res.status(403).send({
-      //             success: false,
-      //             message: 'Wrong token'
-      //       });
-      //    }
-      //    req.decoded = decoded;
-      //    next();
-      // });
+         const user = jwt.verify(token, secret);
+         req.decoded = user;
+         next();
+
+      }catch(err){
+
+         return res.status(403).json({
+            status: 'NOT OK',
+            message: err.message
+         });
+
+      }
+
     };
 }
