@@ -1,0 +1,92 @@
+.new-project-page {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 32px;
+  border-radius: 12px;
+  border: 1px solid var(--nav-border-color);
+  backdrop-filter: blur(110px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.new-project-header {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.new-project-title {
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+  margin: 0 0 8px;
+  color: var(--text-color);
+}
+
+.new-project-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.new-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: var(--highlight-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.add-field-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.add-field-form input[type="text"],
+.add-field-form select {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--nav-border-color);
+  background: transparent;
+  color: var(--text-color);
+}
+
+.add-field-form .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.add-field-form button {
+  padding: 6px 16px;
+  background: var(--highlight-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-field-form select option {
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: 12px;
+}

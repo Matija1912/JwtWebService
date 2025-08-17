@@ -1,0 +1,42 @@
+<table class="fields-table">
+  <thead>
+  <tr>
+    <th>Field Name</th>
+    <th>Type</th>
+    <th>Required</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr style="opacity: 50%">
+    <td>Email</td>
+    <td>string</td>
+    <td>true</td>
+    <td></td>
+  </tr>
+  <tr style="opacity: 50%">
+    <td>Password</td>
+    <td>string</td>
+    <td>true</td>
+    <td></td>
+  </tr>
+
+  <tr *ngFor="let field of customFields; let i = index">
+    <td>
+      {{field.name}}
+    </td>
+    <td>
+      {{field.type}}
+    </td>
+    <td>
+      {{field.required}}
+    </td>
+    <td>
+      <div class="action-div">
+        <button (click)="removeField(i)">Remove</button>
+      </div>
+    </td>
+  </tr>
+
+  </tbody>
+</table>

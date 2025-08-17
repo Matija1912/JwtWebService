@@ -1,0 +1,57 @@
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+
+.fields-table th,
+.fields-table td {
+  padding: 12px;
+  border: 1px solid var(--nav-border-color);
+  text-align: left;
+  color: var(--text-color);
+}
+
+.fields-table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.fields-table input[type="text"],
+.fields-table select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--nav-border-color);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.fields-table input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.fields-table button {
+  padding: 6px 10px;
+  background: none;
+  border: 1px solid var(--nav-border-color);
+  border-radius: 6px;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.fields-table button:hover {
+  background: var(--highlight-color);
+  color: white;
+}
+
+.action-div {
+  display: flex;
+  justify-content: center;
+}

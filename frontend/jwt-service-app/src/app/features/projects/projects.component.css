@@ -1,6 +1,19 @@
 .projects-header {
   margin: 20px 0 32px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--nav-border-color);
+}
+
+.projects-header-left {
   text-align: left;
+}
+
+.projects-header-right {
+  display: flex;
+  align-items: center;
 }
 
 .projects-title {
@@ -20,4 +33,10 @@
 .projects-list {
   display: grid;
   gap: 24px;
+}
+
+.no-projects-found {
+  display: flex;
+  justify-content: center;
+  opacity: 50%;
 }

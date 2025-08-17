@@ -1,3 +1,11 @@
+declare class Sha256 {
+    private sha256;
+    private data;
+    constructor(sha256: Function);
+    update: (data: string | Buffer) => this;
+    digest: (format?: "hex" | "binary") => any;
+}
+
 interface JwtHeader {
     alg: string | Algorithm;
     typ?: string | undefined;
@@ -35,9 +43,12 @@ interface VerifyOptions {
     audience?: string | RegExp | string[] | undefined;
 }
 
+declare class crypto {
+    static createSha256(): Sha256;
+}
 declare function decode(data: string): any;
 declare function sign(payload: object, secretOrPrivateKey: Secret, // Secret key with HMAC SHA256 and Private key with asymetric RS256 algorithm
 options?: SignatureOptions): string;
 declare function verify(token: string, secretOrPrivateKey: Secret, options?: VerifyOptions): Jwt | JwtPayload | string;
 
-export { decode, sign, verify };
+export { crypto, decode, sign, verify };

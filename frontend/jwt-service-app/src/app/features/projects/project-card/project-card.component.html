@@ -1,17 +1,16 @@
-<div class="project-card">
+<div *ngIf="project" class="project-card">
   <div class="project-info">
     <p class="title-description">PROJECT NAME</p>
 
-    <h1 class="project-title">KAYO WEB STORE</h1>
+    <h1 class="project-title">{{project.name}}</h1>
 
     <p class="project-subtitle">
-      Description for Kayo web store project. Description for Kayo web store project.
-      Description for Kayo web store project. Description for Kayo web store project.
+      {{project.description}}
     </p>
 
     <ul class="meta">
-      <li>Created: 29.08.2025</li>
-      <li>Users: 21</li>
+      <li>Created: {{project.created_at | date : 'dd.MM.yyyy | hh:mm'}}</li>
+      <li>UUID: {{project.project_key}}</li>
     </ul>
   </div>
 

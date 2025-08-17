@@ -1,6 +1,31 @@
 import jwt from "./native";
 
-class HmacSha256{
+export class Sha256 {
+
+    private sha256: Function;
+    private data: Buffer[];
+
+
+    constructor(sha256: Function){
+        this.sha256 = sha256;
+        this.data = [];
+    }
+
+    update = (data: string | Buffer) => {
+        this.data.push(Buffer.isBuffer(data) ? data : Buffer.from(data));
+        return this;
+    }
+
+    digest = (format: 'hex' | 'binary' = 'hex') => {
+        const buffer = Buffer.concat(this.data);
+        this.data = [];
+        const hash = this.sha256(buffer, buffer.length);
+        return format === 'hex' ? hash.toString('hex') : hash;
+    }
+  
+}
+
+class HmacSha256 {
 
     hmac_sha256: Function;
     data: string | null;

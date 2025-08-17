@@ -1,12 +1,18 @@
 <section class="projects-page">
   <header class="projects-header">
-    <h1 class="projects-title">Your Projects</h1>
-    <p class="projects-subtitle">Manage and explore all your active projects below.</p>
+    <div class="projects-header-left">
+      <h1 class="projects-title">Your Projects</h1>
+      <p class="projects-subtitle">Manage and explore all your active projects below.</p>
+    </div>
+    <div class="projects-header-right">
+      <button class="ghost-btn" [routerLink]="['/newProject']">New Project</button>
+    </div>
   </header>
 
-  <div class="projects-list">
-    <app-project-card></app-project-card>
-    <app-project-card></app-project-card>
-    <app-project-card></app-project-card>
+  <div class="projects-list" *ngIf="projects">
+    <app-project-card *ngFor="let project of projects" [project]="project"></app-project-card>
+  </div>
+  <div *ngIf="projects.length === 0" class="no-projects-found">
+    <p>Nothing here yet.</p>
   </div>
 </section>

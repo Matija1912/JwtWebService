@@ -1,8 +1,13 @@
-import { base64urlDecode } from './algorithms';
+import { base64urlDecode, Sha256 } from './algorithms';
 import { InvalidToken } from './errors';
-import {hmac_sha256, base64url_decode, base64url_encode} from './native'
+import {sha256, hmac_sha256, base64url_decode, base64url_encode} from './native'
 import {Jwt, Secret, SignatureOptions, JwtHeader, JwtPayload, VerifyOptions} from './types_interfaces'
 
+export class crypto{
+    static createSha256() {
+        return new Sha256(sha256)
+    }
+}
 
 export function decode(data: string){
     return base64url_decode(Buffer.from(data), Buffer.from(data).length);

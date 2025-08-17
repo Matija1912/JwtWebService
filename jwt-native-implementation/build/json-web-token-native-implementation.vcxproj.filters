@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src\native_implementation">
+      <UniqueIdentifier>{C5546CA1-2D71-351A-6D4E-1E30C2433D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src\native_implementation">
+      <UniqueIdentifier>{C5546CA1-2D71-351A-6D4E-1E30C2433D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src\native_implementation">
+      <UniqueIdentifier>{C5546CA1-2D71-351A-6D4E-1E30C2433D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\src\native_implementation">
+      <UniqueIdentifier>{C5546CA1-2D71-351A-6D4E-1E30C2433D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:">
+      <UniqueIdentifier>{7B735499-E5DD-1C2B-6C26-70023832A1CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users">
+      <UniqueIdentifier>{E9F714C1-DA89-54E2-60CF-39FEB20BF756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik">
+      <UniqueIdentifier>{27A27037-43B2-AE75-69E7-6C2718756C1E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop">
+      <UniqueIdentifier>{B23D6E4D-7634-EF57-62FC-46A6189C0B6E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop\Zavrsni Rad">
+      <UniqueIdentifier>{1C4A10AF-B6F8-7FF9-0E6E-185DDFCAE669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService">
+      <UniqueIdentifier>{695B9A7B-F4E8-F162-3D1A-42A6B97F09A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService\jwt-native-implementation">
+      <UniqueIdentifier>{2D7E5FDD-DBD7-E460-E52D-09221B451612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService\jwt-native-implementation\node_modules">
+      <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService\jwt-native-implementation\node_modules\node-gyp">
+      <UniqueIdentifier>{77348C0E-2034-7791-74D5-63C077DF5A3B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService\jwt-native-implementation\node_modules\node-gyp\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\native_implementation\jwt.c">
+      <Filter>..\src\native_implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\native_implementation\hmac_sha256.c">
+      <Filter>..\src\native_implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\native_implementation\sha256.c">
+      <Filter>..\src\native_implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\native_implementation\base64url.c">
+      <Filter>..\src\native_implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService\jwt-native-implementation\node_modules\node-gyp\src\win_delay_load_hook.cc">
+      <Filter>C:\Users\Korisnik\Desktop\Zavrsni Rad\JwtWebService\jwt-native-implementation\node_modules\node-gyp\src</Filter>
+    </ClCompile>
+    <None Include="..\binding.gyp">
+      <Filter>..</Filter>
+    </None>
+  </ItemGroup>
+</Project>

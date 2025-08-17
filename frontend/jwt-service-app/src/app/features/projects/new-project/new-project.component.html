@@ -1,0 +1,81 @@
+<section class="new-project-page">
+
+  <form #projectForm="ngForm" *ngIf="showProjectDataForm">
+    <header class="new-project-header">
+      <h1 class="new-project-title">Create a New Project</h1>
+      <p class="new-project-subtitle">Fill in the details below to create your project.</p>
+    </header>
+
+    <div class="form-group">
+      <label>Project Name</label>
+      <input type="text" placeholder="Enter project name" name="name" [(ngModel)]="projectData.name" required
+             #name="ngModel"
+             maxlength="150"
+             [ngClass]="{
+                'valid': name.valid && (name.dirty || name.touched),
+                'invalid': name.invalid && (name.dirty || name.touched)
+                }"
+      />
+
+      <div *ngIf="name.errors && (name.dirty || name.touched)" class="error-info">
+        <p *ngIf="name.errors['required']">Name is required</p>
+        <p *ngIf="name.errors['maxlength']">Name too long</p>
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label>Description (1000 chars max)</label>
+      <textarea rows="4" placeholder="Enter project description" name="description" [(ngModel)]="projectData.description" required
+                #description="ngModel"
+                maxlength="1000"
+                [ngClass]="{
+                  'valid': description.valid && (description.dirty || description.touched),
+                  'invalid': description.invalid && (description.dirty || description.touched)
+                  }"
+      ></textarea>
+
+      <div *ngIf="description.errors && (description.dirty || description.touched)" class="error-info">
+        <p *ngIf="description.errors['required']">Description is required</p>
+        <p *ngIf="description.errors['maxlength']">Description too long</p>
+      </div>
+
+    </div>
+
+    <button type="submit" [disabled]="projectForm.invalid" (click)="next()">Next</button>
+
+  </form>
+
+  <form *ngIf="!showProjectDataForm" #userSchemaForm="ngForm">
+
+    <header class="new-project-header">
+      <h1 class="new-project-title">User Schema</h1>
+      <p class="new-project-subtitle">Add custom fields.</p>
+    </header>
+
+    <app-user-fields [customFields]="projectData.customFields"  (remove)="removeField($event)"></app-user-fields>
+
+    <div class="add-field-form">
+      <input type="text" [(ngModel)]="newField.name" name="newFieldName" placeholder="Field name" required />
+
+      <select [(ngModel)]="newField.type" name="newFieldType" required>
+        <option value="string">String</option>
+        <option value="number">Number</option>
+        <option value="boolean">Boolean</option>
+        <option value="date">Date</option>
+      </select>
+
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="newField.required" name="newFieldRequired" />
+        Required
+      </label>
+
+      <button type="button" [disabled]="(newField.name === '') || (newField.type === '')" (click)="addField()">Add</button>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" (click)="finish()">Finish</button>
+    </div>
+  </form>
+
+</section>

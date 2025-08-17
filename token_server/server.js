@@ -2,22 +2,26 @@ const config = require('./config');
 const express = require('express');
 const jwt = require('jwt-native-implementation');
 const app = express();
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const argon2 = require('argon2');
 const cors = require('cors');
+const middleware = require('./app/routes/middleware')
+const {randomBytes} = require('crypto');
 
+const pool = new Pool(config.pool);
 
-const pool = mysql.createPool(config.pool);
-
-const api = require('./app/routes/api/api');
 const auth = require('./app/routes/auth/auth');
 const sessionRestore = require('./app/routes/auth/sessionRestore');
+const projectsApi = require('./app/routes/api/projectsApi');
 
-const apiRouter = api(express, pool);
 const authRouter = auth(express, pool, argon2, jwt, config.secret);
-const sessionRestoreRouter = sessionRestore(express, pool, jwt, config.secret);
+const sessionRestoreRouter = sessionRestore(express, jwt, config.secret, middleware);
+const projectsApiRouter = projectsApi(express, pool, jwt, config.secret, middleware, randomBytes);
+
+// const s256 = jwt.crypto.createSha256();
+// console.log(s256.update('data').digest('hex'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -27,27 +31,15 @@ app.use(bodyParser.urlencoded({
 app.use(morgan('dev'));
 
 app.use(cors({
-  origin: 'http://localhost:4200',   // Angular dev server
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 app.use('/sessionRestore', sessionRestoreRouter);
+app.use('/projects', projectsApiRouter);
 
 app.listen( config.port, () => {
     console.log(`Server running on:  http://localhost:${config.port}`);
 } )
-
-
-// const payload = { userId: 123, username: "Klementina123" };
-// const secret = "your_secret_keyasdasdasdasd";
-
-// const token = jwt.sign(payload, secret, {algorithm: "HS256", notBefore: 2, audience:['www.something.eu', 'www.somethingelse.gov']});
-
-// setTimeout(() => {
-    
-//     console.log(jwt.verify(token, secret, {audience: /^www\.somethingelse\.gov/i}));
-
-// }, 3000);

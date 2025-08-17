@@ -1,5 +1,6 @@
 #include <node_api.h>
 #include "hmac_sha256.h"
+#include "sha256.h"
 #include "base64url.h"
 #include <stdlib.h>
 #include "base64url.h"
@@ -22,6 +23,37 @@
       return NULL;                                                \
     }                                                             \
   } while(0)
+
+
+static napi_value sha256_wrapper(napi_env env, napi_callback_info info){
+    size_t argc = 2;
+    napi_value args[2];
+
+    void* messageData;
+    size_t mesageDataLen;
+
+    double messageSize;
+
+    void* keyData;
+    size_t keyDataLen;
+
+    double keySize;
+
+
+    NODE_API_CALL(env, napi_get_cb_info(env, info, &argc, args, NULL, NULL));
+    NODE_API_CALL(env, napi_get_buffer_info(env, args[0], &messageData, &mesageDataLen));
+    NODE_API_CALL(env, napi_get_value_double(env, args[1], &messageSize));
+    size_t actualMessageSize = (size_t)messageSize;
+
+    uint8_t* sha256Result = sha256(messageData, actualMessageSize);
+
+    napi_value buffer;
+    void* data;
+    napi_create_buffer_copy(env, 32, sha256Result, &data, &buffer);
+    free(sha256Result);
+
+    return buffer;
+}
 
 static napi_value hmac_sha256_wrapper(napi_env env, napi_callback_info info){
     size_t argc = 4;
@@ -123,6 +155,16 @@ napi_value Init(napi_env env, napi_value exports){
   napi_status status;
   
   napi_property_descriptor desc[] = {
+    {
+      "sha256",
+      NULL,
+      sha256_wrapper,
+      NULL,
+      NULL,
+      NULL,
+      napi_writable | napi_enumerable | napi_configurable,
+      NULL
+    },
     {
       "hmac_sha256",
       NULL,

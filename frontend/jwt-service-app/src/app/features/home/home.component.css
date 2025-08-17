@@ -49,20 +49,6 @@
   margin-bottom: 14px;
 }
 
-.ghost-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--nav-border-color);
-  text-decoration: none;
-  color: var(--text-color);
-}
-.ghost-btn:hover {
-  border-color: var(--hover-color);
-  color: var(--hover-color);
-}
-
 .meta {
   display: flex;
   gap: 12px;

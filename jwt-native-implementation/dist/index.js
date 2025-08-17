@@ -46,8 +46,9 @@ var require_native = __commonJS({
     "use strict";
     init_cjs_shims();
     var import_path = __toESM(require("path"));
-    var { hmac_sha256: hmac_sha2562, base64url_encode: base64url_encode2, base64url_decode: base64url_decode2 } = require("node-gyp-build")(import_path.default.resolve(__dirname, ".."));
+    var { sha256: sha2562, hmac_sha256: hmac_sha2562, base64url_encode: base64url_encode2, base64url_decode: base64url_decode2 } = require("node-gyp-build")(import_path.default.resolve(__dirname, ".."));
     var native = {
+      sha256: sha2562,
       hmac_sha256: hmac_sha2562,
       base64url_encode: base64url_encode2,
       base64url_decode: base64url_decode2
@@ -59,12 +60,35 @@ var require_native = __commonJS({
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
+  crypto: () => crypto,
   decode: () => decode,
   sign: () => sign,
   verify: () => verify
 });
 module.exports = __toCommonJS(index_exports);
 init_cjs_shims();
+
+// src/algorithms.ts
+init_cjs_shims();
+var import_native = __toESM(require_native());
+var Sha256 = class {
+  sha256;
+  data;
+  constructor(sha2562) {
+    this.sha256 = sha2562;
+    this.data = [];
+  }
+  update = (data) => {
+    this.data.push(Buffer.isBuffer(data) ? data : Buffer.from(data));
+    return this;
+  };
+  digest = (format = "hex") => {
+    const buffer = Buffer.concat(this.data);
+    this.data = [];
+    const hash = this.sha256(buffer, buffer.length);
+    return format === "hex" ? hash.toString("hex") : hash;
+  };
+};
 
 // src/errors.ts
 init_cjs_shims();
@@ -75,9 +99,14 @@ var InvalidToken = class extends Error {
 };
 
 // src/index.ts
-var import_native = __toESM(require_native());
+var import_native2 = __toESM(require_native());
+var crypto = class {
+  static createSha256() {
+    return new Sha256(import_native2.sha256);
+  }
+};
 function decode(data) {
-  return (0, import_native.base64url_decode)(Buffer.from(data), Buffer.from(data).length);
+  return (0, import_native2.base64url_decode)(Buffer.from(data), Buffer.from(data).length);
 }
 function sign(payload, secretOrPrivateKey, options) {
   const iat = Math.floor(Date.now() / 1e3);
@@ -95,10 +124,10 @@ function sign(payload, secretOrPrivateKey, options) {
     ...options?.header?.typ !== void 0 ? { typ: options.header.typ } : { typ: "JWT" }
   }));
   if (options === void 0 || options.algorithm === void 0 || options.algorithm === "HS256") {
-    const b64u = Buffer.from((0, import_native.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native.base64url_encode)(payloadData, payloadData.length).toString());
+    const b64u = Buffer.from((0, import_native2.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native2.base64url_encode)(payloadData, payloadData.length).toString());
     const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
-    const signature = (0, import_native.hmac_sha256)(b64u, b64u.length, secret, secret.length);
-    return (0, import_native.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native.base64url_encode)(payloadData, payloadData.length).toString() + "." + (0, import_native.base64url_encode)(signature, signature.length).toString();
+    const signature = (0, import_native2.hmac_sha256)(b64u, b64u.length, secret, secret.length);
+    return (0, import_native2.base64url_encode)(headerData, headerData.length).toString() + "." + (0, import_native2.base64url_encode)(payloadData, payloadData.length).toString() + "." + (0, import_native2.base64url_encode)(signature, signature.length).toString();
   } else if (options.algorithm === "RS256") {
     return "Asymetric";
   } else {
@@ -110,14 +139,14 @@ function verify(token, secretOrPrivateKey, options) {
   if (!jwtRegex.test(token)) {
     throw new InvalidToken("Invalid token format.");
   }
-  const jwt = token.split(".");
+  const jwt2 = token.split(".");
   if (options === void 0 || options.algorithm === void 0 || options.algorithm === "HS256") {
     const secret = Buffer.isBuffer(secretOrPrivateKey) ? secretOrPrivateKey : Buffer.from(secretOrPrivateKey);
-    const b64u = Buffer.from(jwt[0] + "." + jwt[1]);
-    const signature = (0, import_native.base64url_decode)(Buffer.from(jwt[2]), Buffer.from(jwt[2]).length);
-    const checkSignature = (0, import_native.hmac_sha256)(b64u, b64u.length, secret, secret.length);
+    const b64u = Buffer.from(jwt2[0] + "." + jwt2[1]);
+    const signature = (0, import_native2.base64url_decode)(Buffer.from(jwt2[2]), Buffer.from(jwt2[2]).length);
+    const checkSignature = (0, import_native2.hmac_sha256)(b64u, b64u.length, secret, secret.length);
     if (checkSignature.toString("hex") === signature.toString("hex")) {
-      const payload = JSON.parse((0, import_native.base64url_decode)(Buffer.from(jwt[1]), Buffer.from(jwt[1]).length).toString());
+      const payload = JSON.parse((0, import_native2.base64url_decode)(Buffer.from(jwt2[1]), Buffer.from(jwt2[1]).length).toString());
       if (payload.exp) {
         if (Date.now() / 1e3 > payload.exp) {
           throw new InvalidToken("Token has expired.");
@@ -158,6 +187,7 @@ function verify(token, secretOrPrivateKey, options) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  crypto,
   decode,
   sign,
   verify
