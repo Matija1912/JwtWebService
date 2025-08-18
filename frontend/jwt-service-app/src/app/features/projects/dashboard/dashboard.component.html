@@ -1,0 +1,34 @@
+<div class="project-dashboard-container" *ngIf="project">
+
+  <section class="project-hero">
+    <div>
+      <p class="title-description">PROJECT NAME</p>
+
+      <h1 class="project-title">{{project.name}}</h1>
+
+      <p class="title-description">PROJECT DESCRIPTION</p>
+      <p class="project-subtitle">{{project.description}}</p>
+
+      <div class="project-action">
+
+        <button class="ghost-btn" (click)="copyProjectKey()">Copy Project Key</button>
+        <button class="ghost-btn" (click)="regenerateSecret()">Regenerate Project Secret</button>
+        <button class="ghost-btn-delete" (click)="deleteProject(projectKey)">Delete Project</button>
+
+      </div>
+
+    </div>
+
+    <div class="info-card">
+      <h3>User Schema</h3>
+      <p class="schema">{{project.user_schema | json }}</p>
+    </div>
+
+  </section>
+
+  <section class="project-content">
+
+
+
+  </section>
+</div>

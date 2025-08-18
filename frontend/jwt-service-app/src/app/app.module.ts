@@ -13,6 +13,9 @@ import { ProjectCardComponent } from './features/projects/project-card/project-c
 import { NewProjectComponent } from './features/projects/new-project/new-project.component';
 import {FormsModule} from '@angular/forms';
 import { UserFieldsComponent } from './features/projects/new-project/user-fields/user-fields.component';
+import { DashboardComponent } from './features/projects/dashboard/dashboard.component';
+import { ActionsComponent } from './features/projects/dashboard/actions/actions.component';
+import { UserSchemaComponent } from './features/projects/dashboard/user-schema/user-schema.component';
 
 
 @NgModule({
@@ -23,7 +26,10 @@ import { UserFieldsComponent } from './features/projects/new-project/user-fields
     ProjectsComponent,
     ProjectCardComponent,
     NewProjectComponent,
-    UserFieldsComponent
+    UserFieldsComponent,
+    DashboardComponent,
+    ActionsComponent,
+    UserSchemaComponent
   ],
   imports: [
     BrowserModule,

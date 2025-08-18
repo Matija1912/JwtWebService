@@ -33,6 +33,22 @@ body::before {
   background-size: cover;
 }
 
+.ghost-btn-delete {
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--text-danger);
+  text-decoration: none;
+  color: var(--text-danger);
+}
+
+.ghost-btn-delete:hover {
+  background-color: var(--text-danger);
+  color: var(--text-color);
+}
+
 .ghost-btn {
   background-color: transparent;
   display: inline-flex;
@@ -81,6 +97,20 @@ input, textarea {
   border: 1px solid var(--valid-color);
 }
 
+.meta {
+  display: flex;
+  gap: 12px;
+  padding: 0;
+  margin: 8px 0 0;
+  list-style: none;
+}
+.meta li {
+  font-size: 12px;
+  opacity: 0.7;
+  border: 1px dashed var(--nav-border-color);
+  padding: 6px 8px;
+  border-radius: 999px;
+}
 
 /* Mobile */
 @media (max-width: 767px) {

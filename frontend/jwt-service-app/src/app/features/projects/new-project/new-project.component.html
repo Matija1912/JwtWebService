@@ -1,6 +1,29 @@
-<section class="new-project-page">
+<section class="new-project-page" *ngIf="projectCreated && projectResponse">
 
-  <form #projectForm="ngForm" *ngIf="showProjectDataForm">
+  <header class="new-project-header">
+    <h1 class="new-project-title">{{projectResponse.projectName | slice: 0 : 20}}</h1>
+    <p class="new-project-subtitle">Please copy and save the project secret. Do not share this secret.</p>
+  </header>
+
+  <div class="secret-row">
+    <span>Secret key: </span>
+    <span class="secret-value">
+      {{ projectResponse.secret | slice:0:20 }}...
+    </span>
+    <button type="button" class="copy-button" (click)="copySecret(projectResponse.secret)">
+      Copy
+    </button>
+    <a *ngIf="goToDashboardLink" class="ghost-btn" [routerLink]="['/dashboard', projectResponse.projectKey]">Dashboard</a>
+  </div>
+
+  <div class="note">
+    <span>Note: You will not be able to get the secret key after exiting this page.</span>
+  </div>
+
+</section>
+
+<section class="new-project-page" *ngIf="!projectCreated">
+  <form #projectForm="ngForm">
     <header class="new-project-header">
       <h1 class="new-project-title">Create a New Project</h1>
       <p class="new-project-subtitle">Fill in the details below to create your project.</p>
@@ -42,12 +65,6 @@
 
     </div>
 
-    <button type="submit" [disabled]="projectForm.invalid" (click)="next()">Next</button>
-
-  </form>
-
-  <form *ngIf="!showProjectDataForm" #userSchemaForm="ngForm">
-
     <header class="new-project-header">
       <h1 class="new-project-title">User Schema</h1>
       <p class="new-project-subtitle">Add custom fields.</p>
@@ -56,9 +73,9 @@
     <app-user-fields [customFields]="projectData.customFields"  (remove)="removeField($event)"></app-user-fields>
 
     <div class="add-field-form">
-      <input type="text" [(ngModel)]="newField.name" name="newFieldName" placeholder="Field name" required />
+      <input type="text" [(ngModel)]="newField.name" name="newFieldName" placeholder="Field name"/>
 
-      <select [(ngModel)]="newField.type" name="newFieldType" required>
+      <select [(ngModel)]="newField.type" name="newFieldType">
         <option value="string">String</option>
         <option value="number">Number</option>
         <option value="boolean">Boolean</option>
@@ -74,8 +91,8 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" (click)="finish()">Finish</button>
+      <button type="submit" [disabled]="projectForm.invalid" (click)="finish()">Finish</button>
     </div>
-  </form>
 
+  </form>
 </section>

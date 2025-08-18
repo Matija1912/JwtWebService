@@ -16,7 +16,11 @@ export class ProjectsService {
   }
 
   createNewProject = (projectData: {name: string; description: string, customFields: {name: string, type: string, required: boolean}[]}) => {
-    return this.http.post(this.projectsApiUrl + '/createNewProject', projectData);
+    return this.http.post<{status: string, secret: string, project: {id: number, project_key: string, name: string, description: string, user_schema: object}}>(this.projectsApiUrl + '/createNewProject', projectData);
+  }
+
+  getProject = (projectKey : string) => {
+    return this.http.get<{status: string, project: {id: number, project_key: string, name: string, description: string, user_schema: object}}>(this.projectsApiUrl + '/getProject', {params: {projectKey: projectKey}});
   }
 
 }

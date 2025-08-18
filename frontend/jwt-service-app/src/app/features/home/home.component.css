@@ -49,21 +49,6 @@
   margin-bottom: 14px;
 }
 
-.meta {
-  display: flex;
-  gap: 12px;
-  padding: 0;
-  margin: 8px 0 0;
-  list-style: none;
-}
-.meta li {
-  font-size: 12px;
-  opacity: 0.7;
-  border: 1px dashed var(--nav-border-color);
-  padding: 6px 8px;
-  border-radius: 999px;
-}
-
 .hero-right {
   position: relative;
   aspect-ratio: 4 / 3;
