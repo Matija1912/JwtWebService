@@ -4,6 +4,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {RouterLink} from "@angular/router";
 import {FooterComponent} from './components/footer/footer.component';
 import { InfoBlockComponent } from './components/info-block/info-block.component';
+import { CharLimitPipe } from './pipes/char-limit.pipe';
 
 
 
@@ -11,7 +12,8 @@ import { InfoBlockComponent } from './components/info-block/info-block.component
   declarations: [
     NavbarComponent,
     FooterComponent,
-    InfoBlockComponent
+    InfoBlockComponent,
+    CharLimitPipe
   ],
   imports: [
     CommonModule,

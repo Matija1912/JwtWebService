@@ -27,7 +27,6 @@ module.exports = (jwt, secret, pool) => {
               });
             }
 
-
             const project = result.rows[0];
             const expectedHash = project.secret;
            
@@ -60,6 +59,7 @@ module.exports = (jwt, secret, pool) => {
             }
 
             req.body.userSchema = userSchema;
+            req.body.tokenExpiration = project.token_expiration;
 
             next();
 

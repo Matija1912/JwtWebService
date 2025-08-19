@@ -1,20 +1,18 @@
-module.exports = (express, pool, jwt, secret, middleware) => {
+module.exports = (express, pool, jwt, secret, middleware, argon2) => {
      const userAuthApi = express.Router();
 
-     userAuthApi.use(middleware(jwt, secret, pool));
+     userDataValidation = (userSchema, userData, dataTypeErrors, clientInputErrors) => {
 
-     userAuthApi.post('/registerUser', async (req, res) => {
-
-          
-          const userSchema = req.body.userSchema;
-          const userData = req.body.userData;
+          if(Object.keys(userSchema).length !== Object.keys(userData).length){
+                    dataTypeErrors.push('Number of properties provided in user data does not fit the user schema');
+               }
 
           for (let key in userSchema){
                const { required, type } = userSchema[key];
                const value = userData[key];
                
                if (required && (value === undefined || value === null)) {
-                    errors.push(`Missing required field: ${key}`);
+                    dataTypeErrors.push(`Missing required field: ${key}`);
                     continue;
                }
               
@@ -22,77 +20,209 @@ module.exports = (express, pool, jwt, secret, middleware) => {
 
                switch (type) {
                     case "string":
-                    if (typeof value !== "string") {
-                         errors.push(`Invalid type for ${key}: expected string, got ${typeof value}`);
-                    }
+
+                         if (typeof value !== "string") {
+                              dataTypeErrors.push(`Invalid type for ${key}: expected string, got ${typeof value}`);
+                         }
+
+                         if(key === 'email'){
+                              const emailNormalized = String(value).toLowerCase();
+                              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNormalized)) {
+                                   clientInputErrors.push('Invalid email format');
+                              }
+                         }
+
+                         if(key === 'password'){
+                              if (String(value).length < 8) {
+                                   clientInputErrors.push('Password must be 8 characters or longer.');
+                              }
+                         }
+
                     break;
 
                     case "number":
-                    if (typeof value !== "number" || Number.isNaN(value)) {
-                         errors.push(`Invalid type for ${key}: expected number, got ${typeof value}`);
-                    }
+                         if (typeof value !== "number" || Number.isNaN(value)) {
+                              dataTypeErrors.push(`Invalid type for ${key}: expected number, got ${typeof value}`);
+                         }
                     break;
 
                     case "boolean":
-                    if (typeof value !== "boolean") {
-                         errors.push(`Invalid type for ${key}: expected boolean, got ${typeof value}`);
-                    }
+                         if (typeof value !== "boolean") {
+                              dataTypeErrors.push(`Invalid type for ${key}: expected boolean, got ${typeof value}`);
+                         }
                     break;
 
                     case "date":
-                    // Accept either Date objects or valid date strings
-                    const d = new Date(value);
-                    if (isNaN(d.getTime())) {
-                         errors.push(`Invalid type for ${key}: expected date, got ${value}`);
-                    }
+                         const d = new Date(value);
+                         if (isNaN(d.getTime())) {
+                              dataTypeErrors.push(`Invalid type for ${key}: expected date, got ${value}`);
+                         }
                     break;
 
                     default:
-                    errors.push(`Unknown type "${type}" for field: ${key}`);
+                    dataTypeErrors.push(`Unknown type "${type}" for field: ${key}`);
                }
 
           }
 
+     }
+
+     userAuthApi.use(middleware(jwt, secret, pool));
+
+     userAuthApi.post('/registerUser', async (req, res) => {
           
-          return res.status(201).send({
-               data: req.body
-          })
+          const userSchema = req.body.userSchema;
+          const userData = req.body.userData;
+
+          const dataTypeErrors = [];
+          const clientInputErrors = [];
+          const serverErrors = []
+
+          userDataValidation(userSchema, userData, dataTypeErrors, clientInputErrors);
+
+          if (dataTypeErrors.length > 0 || clientInputErrors.length > 0) {
+               const response = { status: "NOT OK" };
+
+               if (dataTypeErrors.length > 0) {
+                    response.dataTypeErrors = dataTypeErrors;
+               }
+               if (clientInputErrors.length > 0) {
+                    response.clientInputErrors = clientInputErrors;
+               }
+
+               return res.status(400).json(response);
+          }
+
+          try{
+               const { email, password, ...customFields} = userData;
+               const project_key = req.body.projectKey
+               
+               const passwordHash = await argon2.hash(password);
+
+               const result = await pool.query(
+                    'INSERT INTO users (email, password_hash, custom_fields, project_key) ' +
+                    'VALUES ($1, $2, $3, $4) RETURNING id, email, custom_fields',
+                    [email, passwordHash, customFields, project_key]
+               );
+
+               const insertedUser = result.rows[0];
+
+               return res.status(201).json({
+                    status: 'OK',
+                    message: 'User created',
+                    user: insertedUser
+               });
+
+          }catch(err){
+               if(err.code === '23505'){
+                    clientInputErrors.push('Email already exists');
+                    return res.status(409).json({ 
+                         status: 'NOT OK',
+                         clientInputErrors: clientInputErrors 
+                    });
+               }
+               serverErrors.push('Server error');
+               return res.status(500).json({ 
+                    status: 'ERROR',
+                    serverErrors: serverErrors
+               });
+          }
+
+    })
+
+    userAuthApi.post('/loginUser', async (req, res) => {
+     
+          const projectKey = req.body.projectKey;
+          const { email, password } = req.body.loginData;
+
+          const clientInputErrors = [];
+          const serverErrors = []
+
+          try{
+               const result = await pool.query(
+                    'SELECT id, email, password_hash, custom_fields from users ' +
+                    'WHERE project_key = $1 AND email = $2 LIMIT 1',
+                    [projectKey, email]
+               );
+               
+               if(result.rows.length === 0){
+                    clientInputErrors.push('Invalid credentials');
+                    return res.status(401).json({
+                         status: 'NOT OK',
+                         clientInputErrors: clientInputErrors 
+                    })
+               }
+
+               const fetchedUser = {
+                    id: result.rows[0].id,
+                    email: result.rows[0].email,
+                    passwordHash : result.rows[0].password_hash,
+                    customFields: result.rows[0].custom_fields
+               }
+
+               
+               const isValid = await argon2.verify(fetchedUser.passwordHash, password);
+
+               if (!isValid) {
+                    clientInputErrors.push('Invalid credentials');
+                    return res.status(401).json({
+                         status: 'NOT OK',
+                         clientInputErrors: clientInputErrors 
+                    })
+               }
+
+               const token = jwt.sign({
+                    id: fetchedUser.id,
+                    email: fetchedUser.email,
+                    customFields: fetchedUser.customFields
+               }, secret, {
+                    expiresIn: req.body.tokenExpiration
+               })
+
+               return res.status(200).json({
+                    status: 'OK',
+                    message: 'Login successful',
+                    user: { 
+                         id: fetchedUser.id,
+                         email: fetchedUser.email,
+                         customFields: fetchedUser.customFields
+                    },
+                    token: token
+               });
 
 
+          }catch(err){
+               serverErrors.push('Server error');
+               return res.status(500).json({ 
+                    status: 'ERROR',
+                    serverErrors: serverErrors
+               });
+          }
 
-     //    try{
-     //        const user = req.decoded;
+    })
 
-     //        if (!user) {
-     //            return res.status(400).json({
-     //                status: 'NOT OK',
-     //                message: 'Auth token issue.'
-     //            });
-     //        }
-     //        const projectData = req.body;
 
-     //        const secret = randomBytes(64);
-     //        const hashedSecret = jwt.crypto.createSha256().update(secret).digest('hex')           
+     userAuthApi.post('/verifyToken', async (req, res) => {
+     
+          const projectKey = req.body.projectKey;
+          const token = req.body.token;
 
-     //        const result = await pool.query(
-     //            'INSERT INTO projects (account_id, name, description, secret, user_schema) values ($1, $2, $3, $4, $5)'+
-     //            'RETURNING id, project_key, name, description, user_schema',
-     //            [user.id, projectData.name, projectData.description, hashedSecret, JSON.stringify(projectData.customFields)]
-     //        )
+          try{
 
-     //         return res.status(201).json({
-     //            status: 'OK',
-     //            secret: secret.toString('hex'),
-     //            project: result.rows[0]
-     //        });
+               const user = jwt.verify(token, secret);
+               return res.status(200).json({ 
+                    status: 'OK',
+                    user: user
+               });
 
-     //    }catch(err){
-     //        console.error('Project creatin error:', err);
-     //        return res.status(500).json({ 
-     //            status: 'ERROR',
-     //             message: 'Server error' 
-     //            });
-     //    }
+          }catch (err){;
+               return res.status(500).json({ 
+                    status: 'TOKEN ERROR',
+                    message: err.message
+               });
+
+          }
+
     })
 
     return userAuthApi;

@@ -73,6 +73,7 @@
   max-width: 52ch;
   color: var(--text-color);
   opacity: 0.9;
+  overflow-wrap: break-word;
 }
 
 .meta {
