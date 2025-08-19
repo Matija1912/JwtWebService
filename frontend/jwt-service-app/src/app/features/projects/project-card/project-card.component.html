@@ -5,7 +5,7 @@
     <h1 class="project-title">{{project.name}}</h1>
 
     <p class="project-subtitle">
-      {{project.description}}
+      {{project.description | charLimit : 150}}
     </p>
 
     <ul class="meta">

@@ -23,7 +23,8 @@ import { CharLimitPipe } from './pipes/char-limit.pipe';
   exports: [
     NavbarComponent,
     FooterComponent,
-    InfoBlockComponent
+    InfoBlockComponent,
+    CharLimitPipe
   ]
 })
 export class SharedModule { }

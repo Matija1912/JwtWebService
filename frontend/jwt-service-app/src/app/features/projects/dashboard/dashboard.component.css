@@ -4,9 +4,9 @@
   padding: 24px 20px 60px;
 }
 
-.project-hero {
+.project-data-block {
   margin-bottom: 20px;
-  backdrop-filter: blur(110px);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
   display: flex;
@@ -16,8 +16,14 @@
   border-radius: 12px;
 }
 
+.project-data-block.api-docs {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+}
+
 @media (max-width: 1224px) {
-  .project-hero {
+  .project-data-block {
     flex-direction: column;
     align-items: center;
   }
@@ -41,14 +47,14 @@
   max-width: 52ch;
   opacity: 0.9;
   color: var(--text-color);
+  overflow-wrap: break-word;
 }
-
 
 .info-card {
   border: 1px solid var(--nav-border-color);
   border-radius: 12px;
   padding-left: 20px;
-  backdrop-filter: blur(110px);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   min-width: 250px;
 }
@@ -76,4 +82,42 @@
 
 .project-action button {
   margin-right: 12px;
+}
+
+.api-card {
+  width: 92%;
+  border: 1px solid var(--nav-border-color);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.api-card:hover {
+  border-color: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+.api-card h3 {
+  margin: 0 0 8px;
+  color: var(--text-color);
+}
+
+.api-card .title-description {
+  margin: 0 0 8px;
+}
+
+.code-block {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 12px;
+  color: var(--text-color);
+  opacity: 0.9;
+  overflow-x: auto;
 }

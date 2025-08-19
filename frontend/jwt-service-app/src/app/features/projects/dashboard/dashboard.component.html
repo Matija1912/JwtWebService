@@ -1,34 +1,75 @@
 <div class="project-dashboard-container" *ngIf="project">
 
-  <section class="project-hero">
+  <!-- PROJECT INFO -->
+  <section class="project-data-block">
     <div>
       <p class="title-description">PROJECT NAME</p>
-
       <h1 class="project-title">{{project.name}}</h1>
 
       <p class="title-description">PROJECT DESCRIPTION</p>
       <p class="project-subtitle">{{project.description}}</p>
 
       <div class="project-action">
-
         <button class="ghost-btn" (click)="copyProjectKey()">Copy Project Key</button>
         <button class="ghost-btn" (click)="regenerateSecret()">Regenerate Project Secret</button>
         <button class="ghost-btn-delete" (click)="deleteProject(projectKey)">Delete Project</button>
-
       </div>
-
     </div>
 
     <div class="info-card">
       <h3>User Schema</h3>
       <p class="schema">{{project.user_schema | json }}</p>
     </div>
-
   </section>
 
-  <section class="project-content">
+  <!-- API DOCS -->
+  <section class="project-data-block api-docs">
+    <h1 class="project-title">API DOCS</h1>
 
+    <div class="api-card">
+      <h3>Register User</h3>
+      <p class="title-description">POST /api/registerUser</p>
 
+      <p class="title-description">Request</p>
+      <pre class="code-block">
+        {{registerUserRequest | json}}
+      </pre>
 
+      <p class="title-description">Response</p>
+      <pre class="code-block">
+        {{registerUserResponse | json}}
+      </pre>
+
+    </div>
+
+    <div class="api-card">
+      <h3>Login User</h3>
+      <p class="title-description">POST /api/loginUser</p>
+
+      <p class="title-description">Request</p>
+      <pre class="code-block">
+        {{loginUserRequest | json}}
+      </pre>
+
+      <p class="title-description">Response</p>
+      <pre class="code-block">
+        {{loginUserResponse | json}}
+      </pre>
+    </div>
+
+    <div class="api-card">
+      <h3>Verify Token</h3>
+      <p class="title-description">POST /api/verifyToken</p>
+
+      <p class="title-description">Request</p>
+      <pre class="code-block">
+        {{verifyUserRequest | json}}
+      </pre>
+
+      <p class="title-description">Response</p>
+      <pre class="code-block">
+        {{verifyUserResponse | json}}
+      </pre>
+    </div>
   </section>
 </div>
