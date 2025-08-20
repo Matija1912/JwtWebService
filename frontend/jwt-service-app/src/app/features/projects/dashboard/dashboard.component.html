@@ -1,5 +1,51 @@
 <div class="project-dashboard-container" *ngIf="project">
 
+  <div class="secret-row" *ngIf="regeneratedSecret">
+    <span>New secret key: </span>
+    <span class="secret-value">
+      {{ regeneratedSecret | slice:0:20 }}...
+    </span>
+    <button type="button" class="copy-button" (click)="copyNewSecret(regeneratedSecret)">
+      Copy
+    </button>
+  </div>
+
+
+  <div class="delete-project-row" *ngIf="deleteProjectConfirmation">
+    <div class="delete-project-title-box">
+      <h3>Delete this project</h3>
+    </div>
+    <app-info-block [data]="deletionResultData"></app-info-block>
+    <form  #deleteForm="ngForm" class="delete-form">
+      <div class="input-div">
+        <label>Enter your password: </label>
+        <input type="password" name="password" [(ngModel)]="deleteConfirmationData.password" required #password="ngModel"
+               [ngClass]="{
+               'valid': password.valid && (password.dirty || password.touched),
+               'invalid': password.invalid && (password.dirty || password.touched)
+          }"
+        >
+      </div>
+      <div class="input-div">
+        <label>Project secret: </label>
+        <input type="text" name="secretKey" [(ngModel)]="deleteConfirmationData.secretKey" required #secretKey="ngModel"
+               [ngClass]="{
+               'valid': secretKey.valid && (secretKey.dirty || secretKey.touched),
+               'invalid': secretKey.invalid && (secretKey.dirty || secretKey.touched)
+          }"
+        >
+      </div>
+      <div class="delete-action">
+        <button [disabled]="deleteForm.invalid" type="button" class="ghost-btn" (click)="deleteProjectConfirm(deleteConfirmationData)">
+          Confirm
+        </button>
+        <button type="button" class="ghost-btn" (click)="cancelDelete()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
   <!-- PROJECT INFO -->
   <section class="project-data-block">
     <div>
@@ -11,8 +57,8 @@
 
       <div class="project-action">
         <button class="ghost-btn" (click)="copyProjectKey()">Copy Project Key</button>
-        <button class="ghost-btn" (click)="regenerateSecret()">Regenerate Project Secret</button>
-        <button class="ghost-btn-delete" (click)="deleteProject(projectKey)">Delete Project</button>
+        <button class="ghost-btn" (click)="regenerateSecret(projectKey)">Regenerate Project Secret</button>
+        <button class="ghost-btn-delete" (click)="deleteProject()">Delete Project</button>
       </div>
     </div>
 

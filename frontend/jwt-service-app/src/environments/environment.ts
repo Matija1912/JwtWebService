@@ -5,5 +5,5 @@
 
 export const environment = {
   production : false,
-  API_URL: 'https://holes-patent-conclusions-northeast.trycloudflare.com'
+  API_URL: 'https://contributed-hunter-treatment-lookup.trycloudflare.com'
 };

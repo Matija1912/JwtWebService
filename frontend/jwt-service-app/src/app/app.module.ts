@@ -16,6 +16,7 @@ import { UserFieldsComponent } from './features/projects/new-project/user-fields
 import { DashboardComponent } from './features/projects/dashboard/dashboard.component';
 import { ActionsComponent } from './features/projects/dashboard/actions/actions.component';
 import { UserSchemaComponent } from './features/projects/dashboard/user-schema/user-schema.component';
+import { UsersComponent } from './features/projects/users/users.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { UserSchemaComponent } from './features/projects/dashboard/user-schema/u
     UserFieldsComponent,
     DashboardComponent,
     ActionsComponent,
-    UserSchemaComponent
+    UserSchemaComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

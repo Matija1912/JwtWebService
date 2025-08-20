@@ -16,7 +16,7 @@
 
   <div class="project-actions">
     <a class="btn primary" [routerLink]="['/dashboard', project.project_key]">Dashboard</a>
-    <a class="btn" href="#">Manage Users</a>
+    <a class="btn" [routerLink]="['/users', project.project_key]">Manage Users</a>
     <a class="btn" href="#">Docs</a>
   </div>
 </div>

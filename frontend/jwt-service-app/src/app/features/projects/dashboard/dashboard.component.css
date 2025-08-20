@@ -121,3 +121,70 @@
   opacity: 0.9;
   overflow-x: auto;
 }
+
+.regenerated-secret {
+  color: var(--text-color);
+}
+
+.secret-value {
+  opacity: 50%;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--nav-border-color);
+}
+
+.delete-project-row {
+  border: 1px solid var(--text-danger);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.delete-form {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 8px;
+}
+
+.delete-action {
+  display: flex;
+  flex-direction: row;
+}
+
+.delete-action button {
+  margin-right: 12px;
+}
+
+.delete-project-title-box {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--text-danger);
+  display: flex;
+  justify-content: center;
+}
+
+.delete-project-title-box h3,
+.delete-project-title-box span {
+  margin: 0;
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 690px) {
+  .delete-form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-div {
+    display: flex;
+    flex-direction: column;
+  }
+}

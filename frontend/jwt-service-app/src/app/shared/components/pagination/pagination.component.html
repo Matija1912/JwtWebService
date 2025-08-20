@@ -1,0 +1,19 @@
+<nav class="pagination">
+  <ul>
+    <li [class.disabled]="currentPage === 1">
+      <button class="ghost-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+        Previous
+      </button>
+    </li>
+
+    <li>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    </li>
+
+    <li [class.disabled]="currentPage === totalPages">
+      <button class="ghost-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        Next
+      </button>
+    </li>
+  </ul>
+</nav>

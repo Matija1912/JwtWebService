@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ProjectsService} from '../../../core/services/projects/projects.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../../../core/services/auth/auth.service';
+import {InfoType} from '../../../shared/components/info-block/infoData.model';
 
 
 @Component({
@@ -10,6 +12,19 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
+  deletionResultData: {
+    infoType: InfoType | null,
+    message: string | null
+  } = {
+    infoType: null,
+    message: null,
+  }
+
+
+  deleteProjectConfirmation: boolean = false;
+  deleteConfirmationData: {password: string, secretKey: string} = {password: '', secretKey: ''};
+
+  regeneratedSecret: string | null = null;
 
   registerUserRequest: {
     projectKey: string;
@@ -94,7 +109,7 @@ export class DashboardComponent implements OnInit {
   project: {id: number, project_key: string, name: string, description: string, user_schema: object} | null = null;
   projectKey: string = '';
 
-  constructor(private projectService: ProjectsService, private route: ActivatedRoute) {}
+  constructor(private projectService: ProjectsService, private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.projectKey = this.route.snapshot.params['project_key'];
@@ -146,18 +161,55 @@ export class DashboardComponent implements OnInit {
     })
   }
 
+  copyNewSecret(secret: string) {
+    navigator.clipboard.writeText(secret).then(() => {
+      alert('Secret copied to clipboard!');
+    });
+  }
+
   copyProjectKey() {
     navigator.clipboard.writeText(this.projectKey).then(() => {
       alert('Project key copied to clipboard!');
     });
   }
 
-  regenerateSecret(){
-    console.log('Regenerate Secret');
+  regenerateSecret(projectKey: string){
+    this.projectService.regenerateSecret(projectKey).subscribe({
+      next: res => {
+        this.regeneratedSecret = res.secret
+      }, error: error => {
+        console.log(error);
+      }
+    })
   }
 
-  deleteProject(project_key: string): void {
-    console.log('Project deleted');
+  cancelDelete() {
+    this.deleteProjectConfirmation = false;
+    this.deleteConfirmationData = {password: '', secretKey: ''};
+  }
+
+  deleteProject(): void {
+    this.deleteProjectConfirmation = true;
+  }
+
+  deleteProjectConfirm(deleteConfirmationData: {password: string, secretKey: string}): void {
+
+    const user = this.authService.getCurrentUser();
+    if (user){
+      this.projectService.deleteProject(this.projectKey, deleteConfirmationData.password, deleteConfirmationData.secretKey, {userId: user.id, email: user.email}).subscribe({
+        next: res => {
+          alert(res.message);
+          this.router.navigate(['/projects']);
+        }, error: error => {
+          this.deletionResultData = {
+            infoType: 'danger',
+            message: error.error.message
+          }
+        }
+      })
+    } else {
+      console.log('no user found in session.');
+    }
   }
 
 }

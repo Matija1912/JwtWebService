@@ -1,0 +1,21 @@
+.pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination ul {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  padding: 0;
+}
+
+.page-btn {
+  padding: 8px 16px;
+}
+
+.disabled button {
+  opacity: 0.4;
+  pointer-events: none;
+}

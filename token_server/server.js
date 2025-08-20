@@ -20,7 +20,7 @@ const userAuthApi = require('./app/routes/api/userAuthApi');
 
 const authRouter = auth(express, pool, argon2, jwt, config.secret);
 const sessionRestoreRouter = sessionRestore(express, jwt, config.secret, middleware);
-const projectsApiRouter = projectsApi(express, pool, jwt, config.secret, middleware, randomBytes, config.backendUrl);
+const projectsApiRouter = projectsApi(express, pool, jwt, config.secret, middleware, randomBytes, config.backendUrl, argon2);
 const userAuthApiRouter =  userAuthApi(express, pool, jwt, config.secret, userApiMiddleware, argon2);
 
 app.use(bodyParser.json());

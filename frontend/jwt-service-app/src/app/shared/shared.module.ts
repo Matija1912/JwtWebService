@@ -5,6 +5,7 @@ import {RouterLink} from "@angular/router";
 import {FooterComponent} from './components/footer/footer.component';
 import { InfoBlockComponent } from './components/info-block/info-block.component';
 import { CharLimitPipe } from './pipes/char-limit.pipe';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 
 
@@ -13,7 +14,8 @@ import { CharLimitPipe } from './pipes/char-limit.pipe';
     NavbarComponent,
     FooterComponent,
     InfoBlockComponent,
-    CharLimitPipe
+    CharLimitPipe,
+    PaginationComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +26,8 @@ import { CharLimitPipe } from './pipes/char-limit.pipe';
     NavbarComponent,
     FooterComponent,
     InfoBlockComponent,
-    CharLimitPipe
+    CharLimitPipe,
+    PaginationComponent
   ]
 })
 export class SharedModule { }

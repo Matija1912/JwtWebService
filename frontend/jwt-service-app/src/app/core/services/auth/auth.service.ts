@@ -81,4 +81,7 @@ export class AuthService {
     this.currentUserSubject.next(user);
   }
 
+  getCurrentUser() {
+    return this.currentUserSubject.value;
+  }
 }
