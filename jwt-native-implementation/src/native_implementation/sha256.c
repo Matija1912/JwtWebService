@@ -80,7 +80,11 @@ void expandMessageSchedule(uint32_t** blockArray, uint8_t **paddedMessage, int b
     for(int j = 0; j < blockNumber; j++){
 
         for(int i = 0; i < 16; i++){
-            W[i] = ((*paddedMessage)[(j * 64) + (i * 4)] << 24) | ((*paddedMessage)[(j * 64) + (i * 4) + 1] << 16) | ((*paddedMessage)[(j * 64) + (i * 4) + 2] << 8) | ((*paddedMessage)[(j * 64) + (i * 4) + 3]); // Konverzija u Big Endian.
+            W[i] = (
+                (*paddedMessage)[(j * 64) + (i * 4)] << 24) 
+                | ((*paddedMessage)[(j * 64) + (i * 4) + 1] << 16) 
+                | ((*paddedMessage)[(j * 64) + (i * 4) + 2] << 8) 
+                | ((*paddedMessage)[(j * 64) + (i * 4) + 3]); // Konverzija u Big Endian.
         }
 
         for(int i = 16; i < 64; i++){
